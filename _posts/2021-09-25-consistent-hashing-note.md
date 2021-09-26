@@ -1,6 +1,12 @@
-## 一致哈希
+---
+layout: post
+title:  "一致哈希 笔记"
+date:   2021-09-25 00:00:00 +0800
+categories: cs
+tag: consistent-hashing
+---
 
-> https://www.youtube.com/watch?v=lm6Zeo3tqK4
+## 原理
 
 传统的哈希函数：
 what is a hash function
@@ -28,7 +34,7 @@ basic technique:
 当新增一个节点时，只有部分相邻区域的key被remapped
 删除一个节点时，下一个节点的负载可能存在翻倍
 
-### 对比
+## 对比
 
 operation   classic hash table   consistent hash table
 add a node         O(k)                 O(K/N+logN)
@@ -37,3 +43,7 @@ add a key          O(1)                 O(logN)
 remove a key       O(1)                 O(logN)
 
 通常N较小
+
+## 参考
+
+> https://www.youtube.com/watch?v=lm6Zeo3tqK4
