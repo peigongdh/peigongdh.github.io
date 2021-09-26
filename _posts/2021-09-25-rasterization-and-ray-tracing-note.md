@@ -1,3 +1,11 @@
+---
+layout: post
+title:  "ray-tracing 笔记"
+date:   2021-09-25 00:00:00 +0800
+categories: cs
+tag: ray-tracing
+---
+
 ## 光线追踪
 
 参考：什么是光线追踪，路径追踪，降噪？
@@ -9,3 +17,14 @@
 
 视频介绍：
 > https://zhuanlan.zhihu.com/p/165539118
+
+## rust-ray-tracing
+
+> https://github.com/peigongdh/rust-ray-tracing-demo
+
+> https://raytracing.github.io/books/RayTracingInOneWeekend.html
+
+> https://zhuanlan.zhihu.com/p/152300191
+
+演示demo
+> https://lucifier129.github.io/rust-ray-tracing-demo/ray-tracing-web/build/

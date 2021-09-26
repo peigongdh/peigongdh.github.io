@@ -6,6 +6,8 @@ categories: cs
 tag: system-design
 ---
 
+## 目录
+
 - 优惠券系统设计
 - - 发券接口限流保护
 
@@ -70,3 +72,20 @@ tag: system-design
 - - 如何快速搜索
 - - 对搜索结果进行排名
 - - 搜索系统容错能力
+
+## 资源
+
+课程
+> https://www.jiuzhang.com/course/77/
+
+system-design-primer
+> https://github.com/donnemartin/system-design-primer/blob/master/README-zh-Hans.md
+
+grokking-the-system-design-interview
+> https://www.educative.io/courses/grokking-the-system-design-interview
+
+上级课程大纲：scalability-system-design
+https://www.educative.io/path/scalability-system-design
+
+延伸推荐OOD：Grokking the Object Oriented Design Interview
+> https://www.educative.io/courses/grokking-the-object-oriented-design-interview?aff=K7qB

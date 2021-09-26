@@ -1,9 +1,10 @@
-## 优雅重启
-
-本文参考如下博客
-> https://juejin.im/post/6867074626427502600
-结合代码分析
-
+---
+layout: post
+title:  "优雅重启 分析1"
+date:   2021-09-26 00:00:00 +0800
+categories: cs
+tag: gradefully-shotdown
+---
 
 ## 如何实现
 
@@ -190,3 +191,8 @@ const (
 ```
 
 StateHijacked：被劫持，例如websocket
+
+## 参考
+
+> https://juejin.im/post/6867074626427502600
+

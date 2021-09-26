@@ -1,4 +1,10 @@
-- **以上笔记整理来源老钱的知乎专栏，仅作为个人笔记，如有侵权请及时联系删除**
+---
+layout: post
+title:  "go 笔记1"
+date:   2021-06-08 00:00:00 +0800
+categories: cs
+tag: go
+---
 
 ## 《快学 Go 语言》第 1 课 —— Hello World
 > https://zhuanlan.zhihu.com/p/48013279

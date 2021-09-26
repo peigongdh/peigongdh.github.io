@@ -1,3 +1,11 @@
+---
+layout: post
+title:  "shadowsocks配置"
+date:   2021-09-25 00:00:00 +0800
+categories: cs
+tag: shadowsocks
+---
+
 ## shadowsocks
 
 ```
@@ -44,7 +52,10 @@ kcptun                           RUNNING   pid 8690, uptime 0:00:11
 supervisor> quit
 ```
 
-配置参数说明：
-https://www.wangjunfeng.com.cn/2019/11/11/kcp-tun-config/
+## 参考
 
-使用脚本：https://github.com/kuoruan/shell-scripts
+配置参数说明：
+> https://www.wangjunfeng.com.cn/2019/11/11/kcp-tun-config/
+
+使用脚本：
+> https://github.com/kuoruan/shell-scripts

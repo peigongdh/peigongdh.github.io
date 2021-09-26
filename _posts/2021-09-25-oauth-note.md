@@ -1,3 +1,11 @@
+---
+layout: post
+title:  "oauth 笔记"
+date:   2021-09-25 00:00:00 +0800
+categories: cs
+tag: oauth
+---
+
 ## 令牌与密码
 
 令牌（token）与密码（password）的作用是一样的，都可以进入系统，但是有三点差异。

@@ -1,6 +1,13 @@
-> https://blog.csdn.net/qq_22343483/article/details/101523185
+---
+layout: post
+title:  "http in go 笔记2"
+date:   2021-09-26 00:00:00 +0800
+categories: cs
+tag: http
+---
 
 ## 问题
+
 一个 TCP 连接可以发多少个 HTTP 请求
 
 要搞懂这个问题，我们需要先解决下面五个问题：
@@ -12,6 +19,7 @@
 
 
 ## 问题0
+
 现代浏览器在与服务器建立了一个 TCP 连接后是否会在一个 HTTP 请求完成后断开？什么情况下会断开？
 
 - 在 HTTP/1.0 中，一个服务器在发送完一个 HTTP 响应后，会断开 TCP 链接。但是这样每次请求都会重新建立和断开 TCP 连接，代价过大。
@@ -25,11 +33,13 @@
 - 所以第一个问题的答案是：默认情况下建立 TCP 连接不会断开，只有在请求报头中声明 Connection: close 才会在请求完成后关闭连接。
 
 ## 问题1
+
 一个 TCP 连接可以对应几个 HTTP 请求？
 
 - 了解了第一个问题之后，其实这个问题已经有了答案，如果维持连接，一个 TCP 连接是可以发送多个 HTTP 请求的。
 
 ## 问题2
+
 一个 TCP 连接中 HTTP 请求发送可以一起发送么（比如一起发三个请求，再三个响应一起接收）？
 
 - HTTP/1.1 存在一个问题，单个 TCP 连接在同一时刻只能处理一个请求
@@ -68,11 +78,13 @@
 - 2、和服务器建立多个 TCP 连接。
 
 ## 问题3
+
 为什么有的时候刷新页面不需要重新建立 SSL 连接？
 
 - 在第一个问题的讨论中已经有了答案：TCP 连接有的时候会被浏览器和服务端维持一段时间。TCP 不需要重新建立，SSL 自然也会用之前的。
 
 ## 问题4
+
 浏览器对同一 Host 建立 TCP 连接到数量有没有限制？
 
 - 假设我们还处在 HTTP/1.1 时代，那个时候没有多路传输，当浏览器拿到一个有几十张图片的网页该怎么办呢？
@@ -82,3 +94,6 @@
 - 所以答案是：有。Chrome 最多允许对同一个 Host 建立六个 TCP 连接。不同的浏览器有一些区别。
 - https://developers.google.com/web/tools/chrome-devtools/network/issues#queued-or-stalled-requestsdevelopers.google.com
 
+## 参考
+
+> https://blog.csdn.net/qq_22343483/article/details/101523185

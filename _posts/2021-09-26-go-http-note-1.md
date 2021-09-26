@@ -1,4 +1,12 @@
-> https://www.codeleading.com/article/61262896573/
+---
+layout: post
+title:  "http in go 笔记1"
+date:   2021-09-26 00:00:00 +0800
+categories: cs
+tag: http
+---
+
+## http in go
 
 从入口开始看
 ```go
@@ -603,3 +611,7 @@ func (mux *ServeMux) ServeHTTP(w ResponseWriter, r *Request) {
 
 总结：
 > Handle 和 HandleFunc 方法用来将路由路径与处理函数的映射通过一个 map 记录到当前的 mux 实例里；Handler 方法将接收的请求中的 URL 预处理后拿去和记录的映射匹配，若匹配到，就返回该路由的处理函数和路径；ServeHTTP 方法将请求派遣给匹配到的处理函数处理。
+
+## 参考
+
+> https://www.codeleading.com/article/61262896573/
