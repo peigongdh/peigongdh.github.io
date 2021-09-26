@@ -1,4 +1,15 @@
-本文为geecache的阅读笔记，参考：
+---
+layout: post
+title:  "geecache 笔记"
+date:   2021-09-25 00:00:00 +0800
+categories: cs
+tag: geecache
+---
+
+## 背景
+
+本文为geecache的阅读笔记
+
 > https://geektutu.com/post/geecache.html
 
 ## 回调Getter

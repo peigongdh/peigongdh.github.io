@@ -1,6 +1,10 @@
-## system-design prepare
-
-系统架构设计 System Design 2021 版中的剩余设计问题
+---
+layout: post
+title:  "system-design 目录"
+date:   2021-09-25 00:00:00 +0800
+categories: cs
+tag: system-design
+---
 
 - 优惠券系统设计
 - - 发券接口限流保护
@@ -66,10 +70,3 @@
 - - 如何快速搜索
 - - 对搜索结果进行排名
 - - 搜索系统容错能力
-
-### master-slave主从模式
-
-例如我们常用的读写分离，master写，slave读
-Slave 与 Master 之间会有心跳数据包（一般数据库服务器会提供配置）。当 Master 有数据写入时 Master 会将数据同步至各 Slave 上。
-
-

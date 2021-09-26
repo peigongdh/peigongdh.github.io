@@ -1,3 +1,11 @@
+---
+layout: post
+title:  "flink安装 笔记"
+date:   2021-09-25 00:00:00 +0800
+categories: cs
+tag: flink
+---
+
 ## flink
 
 https://ci.apache.org/projects/flink/flink-docs-master/deployment/resource-providers/standalone/local.html
@@ -20,13 +28,12 @@ mvn archetype:generate \
 按照手册设置settings.xml全局配置
 > https://ci.apache.org/projects/flink/flink-docs-master/try-flink/datastream_api.html
 
-启动FraudDetectionJob使用如下命令：
+./bin/start-cluster.sh
 
+启动FraudDetectionJob使用如下命令：
 ```
 mvn exec:java -Dexec.mainClass=spendreport.FraudDetectionJob
 ```
-
-./bin/start-cluster.sh
 
 ## kafka
 
@@ -65,6 +72,6 @@ cd pushgateway-1.4.0.darwin-amd64
 ./pushgateway
 ```
 
-
 安装prometheus-gateway
+
 > https://cloud.tencent.com/developer/article/1690610
