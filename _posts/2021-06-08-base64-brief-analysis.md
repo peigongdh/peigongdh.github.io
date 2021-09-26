@@ -3,7 +3,7 @@ layout: post
 title:  "Base64浅析"
 date:   2021-06-08 00:00:00 +0800
 categories: cs
-tag: Base64
+tag: base64
 ---
 
 Base64是一种用64个字符来表示任意二进制数据的方法。
