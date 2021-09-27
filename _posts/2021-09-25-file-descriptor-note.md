@@ -12,10 +12,6 @@ tag: [file, file-descriptor]
 本文打算通过一步一步实验去了解文件描述符到底是什么， 并在最后通过Linux内核相关的源码进行验证。
 
 ```c
-#include <stdio.h>
-#include <stdlib.h>
-#include <fcntl.h>
-
 int main(int argc, char* argv[]) {
 	// 以只读模式打开 demo.txt 文件
 	int fd = open("demo.txt", O_RDONLY);
@@ -45,10 +41,6 @@ $ demo.txt fd = 3
 继续实验，同时调用两次open
 
 ```c
-#include <stdio.h>
-#include <stdlib.h>
-#include <fcntl.h>
-
 int main(int argc, char* argv[]) {
 	int fd_a = open("demo.txt", O_RDONLY);
 	int fd_b = open("demo.txt", O_RDONLY);
@@ -80,11 +72,6 @@ $ fd_a = 3, fd_b = 4
 再次调用 open 函数打开同一个文件
 
 ```c
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <fcntl.h>
-
 int main(int argc, char* argv[]) {
   // 第一次打开
 	int a = open("demo.txt", O_RDONLY);
@@ -115,11 +102,6 @@ $ a = 3, b = 4
 ## 文件描述符和多进程
 
 ```c
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <fcntl.h>
-
 int main(int argc, char* argv[]) {
 
 	int npid = fork();
