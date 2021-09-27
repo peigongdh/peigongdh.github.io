@@ -2,7 +2,7 @@
 layout: post
 title:  "zero-copy 笔记"
 date:   2021-09-25 00:00:00 +0800
-categories: cs os io
+categories: cs os
 tag: zero-copy
 ---
 
