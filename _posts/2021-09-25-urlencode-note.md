@@ -1,6 +1,12 @@
-## urlencode
+---
+layout: post
+title:  "urlencode 笔记"
+date:   2021-09-25 00:00:00 +0800
+categories: cs
+tag: urlencode
+---
 
-> https://www.zhihu.com/question/19673368/answer/71537081
+## urlencode
 
 这个问题涉及到URL的定义。
 我们知道URL是为了 统一的命名网络中的一个资源（URL不是单单为了HTTP协议而定义的，而是网络上的所有的协议都可以使用）。
@@ -29,3 +35,7 @@ const xxxxxxxxx = "tYsvKxjwABSD9-rhp_P7Ty6ZuWLamn2cOlJGg13oCVHQb5RIqief4N8UMkF0d
 
 JWT 作为一个令牌（token），有些场合可能会放到 URL（比如 api.example.com/?token=xxx）。
 Base64 有三个字符+、/和=，在 URL 里面有特殊含义，所以要被替换掉：=被省略、+替换成-，/替换成_ 。这就是 Base64URL 算法。
+
+## 参考
+
+> https://www.zhihu.com/question/19673368/answer/71537081

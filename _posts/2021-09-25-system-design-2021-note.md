@@ -1,8 +1,8 @@
 ---
 layout: post
-title:  "system-design 目录"
+title:  "system-design目录"
 date:   2021-09-25 00:00:00 +0800
-categories: cs
+categories: cs system-design
 tag: system-design
 ---
 

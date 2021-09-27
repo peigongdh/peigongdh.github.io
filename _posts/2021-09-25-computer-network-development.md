@@ -2,7 +2,7 @@
 layout: post
 title:  "计算机网络发展"
 date:   2021-09-25 00:00:00 +0800
-categories: cs
+categories: cs network
 tag: network
 ---
 

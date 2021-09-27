@@ -1,9 +1,9 @@
 ---
 layout: post
-title:  "文件描述符和句柄 笔记"
+title:  "句柄 笔记"
 date:   2021-09-25 00:00:00 +0800
-categories: cs
-tag: file
+categories: cs os
+tag: [file, handler]
 ---
 
 ## 背景

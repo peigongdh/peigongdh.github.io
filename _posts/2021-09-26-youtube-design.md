@@ -1,6 +1,12 @@
-## design youtube
+---
+layout: post
+title:  "youtube系统设计"
+date:   2021-09-26 00:00:00 +0800
+categories: cs system-design
+tag: youtube
+---
 
-> https://www.bilibili.com/video/BV1s5411p7dR
+## design youtube
 
 1. clarify the requirements
 2. capacity estimation（容量估计）
@@ -129,3 +135,7 @@ optimization 3: caching
 
 optimization 4: CDN
 - predict locations where people would prefer to watch a video
+
+## 参考
+
+> https://www.bilibili.com/video/BV1s5411p7dR

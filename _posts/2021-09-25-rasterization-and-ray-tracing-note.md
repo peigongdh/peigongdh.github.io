@@ -2,7 +2,7 @@
 layout: post
 title:  "ray-tracing 笔记"
 date:   2021-09-25 00:00:00 +0800
-categories: cs
+categories: cs cg
 tag: ray-tracing
 ---
 

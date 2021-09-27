@@ -1,9 +1,9 @@
 ---
 layout: post
-title:  "基于redis的限流系统设计 笔记"
+title:  "基于redis的限流系统设计"
 date:   2021-09-26 00:00:00 +0800
-categories: cs
-tag: system-design
+categories: cs system-design
+tag: rate-limit
 ---
 
 ## 概念

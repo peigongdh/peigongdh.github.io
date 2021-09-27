@@ -1,6 +1,12 @@
-## Design twitter
+---
+layout: post
+title:  "推特系统设计"
+date:   2021-09-26 00:00:00 +0800
+categories: cs system-design
+tag: twitter
+---
 
-> https://www.bilibili.com/video/BV1Sf4y1e7wc
+## Design twitter
 
 1. clarify the requirements
 2. capacity estimation（容量估计）
@@ -9,12 +15,12 @@
 5. data storage
 6. scalability
 
-### clarify the requirements
+## clarify the requirements
 
 - post tweets
 - timeline
 
-####  Non-Functional requirement
+###  Non-Functional requirement
 
 consistency
 - 每次请求都可以获取最新的feed或者错误
@@ -25,7 +31,7 @@ availability
 partition tolerance
 - 少部分机器或者网络down掉不影响整体服务
 
-### capacity estimation
+## capacity estimation
 
 - 200million DAU, 100million new tweets
 - each user visit home timeline 5 times; other user timeline 3 times
@@ -44,7 +50,7 @@ text: 32B * 280 bytes / 86400 = 100MB/s
 image: 32B * 20% * 200 / 86400 = 14GB/s
 video: 32B * 10% * 30% * 2MB / 86400 = 20GB/s
 
-### system apis
+## system apis
 
 post tweet
 delete tweet
@@ -80,7 +86,7 @@ do not fanout on non-active users
 - hot users:
 fan in on read(pull): read during timeline request from tweets cache
 
-### data storage
+## data storage
 
 user table
 tweet table
@@ -93,7 +99,7 @@ nosql database:
 file system
 - media file
 
-### scalability
+## scalability
 
 identify potential bottlenecks
 discussion solutions, focusing on tradeoff
@@ -101,7 +107,7 @@ discussion solutions, focusing on tradeoff
 - load balancing: user <-> application server; applcation server <-> cache server; cache server <-> db
 - data caching: read heavy
 
-#### sharding
+### sharding
 
 how: break large tables into smaller shards on multiple servers
 pros: horizointal shards
@@ -126,7 +132,7 @@ option 3: shard by hash(tweetId)
 pros: uniform distribution（均匀分布）; high availability
 cons: need to query all shard in order to generate user / home timeline
 
-#### caching
+### caching
 
 timeline service:
 - user timeline : user_id -> {tweet_id}
@@ -139,3 +145,7 @@ topics:
 - caching policy: FIFO(First In First Out) LRU(Least Recently Used) LFU(Least Frequently Used)
 - sharding
 - performance
+
+## 参考
+
+> https://www.bilibili.com/video/BV1Sf4y1e7wc

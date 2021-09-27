@@ -1,8 +1,8 @@
 ---
 layout: post
-title:  "计算机网络 笔记1"
+title:  "计算机网络协议 笔记"
 date:   2021-09-25 00:00:00 +0800
-categories: cs
+categories: cs network
 tag: network
 ---
 

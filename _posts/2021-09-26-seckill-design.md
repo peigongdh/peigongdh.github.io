@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "秒杀系统设计 笔记"
+title:  "秒杀系统设计"
 date:   2021-09-26 00:00:00 +0800
 categories: cs system-design
 tag: seckill

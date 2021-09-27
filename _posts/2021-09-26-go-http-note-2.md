@@ -2,8 +2,8 @@
 layout: post
 title:  "http in go 笔记2"
 date:   2021-09-26 00:00:00 +0800
-categories: cs
-tag: http
+categories: cs network
+tag: [http, go]
 ---
 
 ## 问题

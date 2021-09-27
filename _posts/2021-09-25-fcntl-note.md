@@ -3,7 +3,7 @@ layout: post
 title:  "fctnl 笔记"
 date:   2021-09-25 00:00:00 +0800
 categories: cs
-tag: file fcntl
+tag: [file, fcntl]
 ---
 
 ## file control

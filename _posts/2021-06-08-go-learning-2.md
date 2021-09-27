@@ -1,8 +1,8 @@
 ---
 layout: post
-title:  "go 笔记2"
+title:  "go语言 笔记2"
 date:   2021-06-08 00:00:00 +0800
-categories: cs
+categories: cs go
 tag: go
 ---
 

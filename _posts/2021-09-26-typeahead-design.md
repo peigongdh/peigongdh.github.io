@@ -1,8 +1,12 @@
-## 设计typeahead
+---
+layout: post
+title:  "type-head系统设计"
+date:   2021-09-26 00:00:00 +0800
+categories: cs system-design
+tag: type-head
+---
 
-> https://www.jianshu.com/p/c7fc9092d9fe
-> http://www.noteanddata.com/interview-problems-system-design-learning-notes-autocomplete.html
-> https://www.youtube.com/watch?v=uIqvbYVBiCI&t=1s
+## 设计
 
 比较粗暴的方式
 
@@ -55,3 +59,9 @@ trie通常的实现有用数组的，有用hashmap的， 这里用哪种？
 存储trie的节点如果挂了怎么办？ 如何提高可用性？
 整个trie是直接放在内存里面嘛？ 还是放在文件里面？ 还是放在其他类似redis或者memcache的系统里面？
 online的service需要做cache嘛?
+
+## 参考
+
+> https://www.jianshu.com/p/c7fc9092d9fe
+> http://www.noteanddata.com/interview-problems-system-design-learning-notes-autocomplete.html
+> https://www.youtube.com/watch?v=uIqvbYVBiCI&t=1s

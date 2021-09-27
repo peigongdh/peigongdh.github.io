@@ -1,3 +1,11 @@
+---
+layout: post
+title:  "zinx 笔记"
+date:   2021-09-25 00:00:00 +0800
+categories: cs
+tag: zinx
+---
+
 ## channel关闭
 
 > Always close a channel on the producer side
@@ -47,3 +55,7 @@ go func(conn net.Conn) {
     }
 }(conn)
 ```
+
+## 参考
+
+> https://github.com/peigongdh/zinx
