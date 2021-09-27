@@ -10,10 +10,11 @@ tag: shadowsocks
 
 ```
 /usr/local/bin/ss-server -v -c /etc/shadowsocks-libev/config.json -f /var/run/shadowsocks-libev.pid
+
+# supervisorctl
 ```
 
-supervisorctl
-
+```
 [program:shadowsocks]
 user=nobody
 directory=/usr/local/shadowsocks
@@ -35,6 +36,7 @@ redirect_stderr=true
 stdout_logfile=/var/log/kcptun/server.log
 stdout_logfile_maxbytes=1MB
 stdout_logfile_backups=0
+```
 
 ## kcptun操作
 
