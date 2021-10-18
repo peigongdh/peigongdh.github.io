@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "kth-largest-element-in-an-array 215"
+title:  "kth-largest-element-in-an-array-215"
 date:   2021-10-18 00:00:00 +0800
 categories: cs algorithm
 tag: [sort, quick-sort]
@@ -84,4 +84,4 @@ func swap(nums []int, i, j int) {
 
 ## 扩展
 
-考虑使用最大堆的方法解决该问题
+考虑使用构造堆的方法解决该问题

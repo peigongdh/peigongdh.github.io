@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "largest number 179"
+title:  "largest-number-179"
 date:   2021-10-12 00:00:00 +0800
 categories: cs algorithm
 tag: sort
