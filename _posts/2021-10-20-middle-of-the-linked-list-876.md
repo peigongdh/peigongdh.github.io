@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "reverse-linked-list"
+title:  "reverse-linked-list-876"
 date:   2021-10-18 00:00:00 +0800
 categories: cs algorithm
 tag: [middle]
