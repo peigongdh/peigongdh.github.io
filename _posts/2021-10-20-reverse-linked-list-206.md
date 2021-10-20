@@ -3,7 +3,7 @@ layout: post
 title:  "reverse-linked-list"
 date:   2021-10-18 00:00:00 +0800
 categories: cs algorithm
-tag: [sort, quick-sort]
+tag: [reverse]
 ---
 
 ## 题目
