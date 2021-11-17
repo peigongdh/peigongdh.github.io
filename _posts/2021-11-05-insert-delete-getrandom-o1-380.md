@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "2021-11-05-insert-delete-getrandom-o1-380"
+title:  "insert-delete-getrandom-o1-380"
 date:   2021-11-04 00:00:00 +0800
 categories: cs algorithm
 tag: [map]
