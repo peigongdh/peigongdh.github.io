@@ -227,4 +227,6 @@ tail defer_queue.meta.dat
   
 其中defer_queue.meta.dat中存放了时间轮，按行分隔   
 1638259200.diskqueue.meta.dat对应时间轮中的消息  
+  
 TODO: 分析剩余文件的含义  
+TODO: 对比研究原版nsq的持久化逻辑    
