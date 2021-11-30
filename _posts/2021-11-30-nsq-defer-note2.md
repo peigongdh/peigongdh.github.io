@@ -208,7 +208,7 @@ nsqdata1 tail test-defer:sensor-defer01.diskqueue.meta.dat
 
 因为存在延时消息的堆积，channel中的readPos和topic中的readPos不一致  
 
-继续观察__deferQ宏的内容：  
+继续观察__deferQ中的内容：  
 
 ```
 tail defer_queue.meta.dat
