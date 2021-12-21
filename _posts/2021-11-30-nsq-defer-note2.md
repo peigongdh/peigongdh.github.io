@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "NSQ延时队列 笔记2"
+title:  "nsq延时队列 笔记2"
 date:   2021-11-30 00:00:00 +0800
 categories: cs
 tag: [mq, nsq, defer]
