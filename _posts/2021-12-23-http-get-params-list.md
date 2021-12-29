@@ -2,8 +2,8 @@
 layout: post
 title:  "http get列表参数 笔记"
 date:   2021-12-23 00:00:00 +0800
-categories: cs net
-tag: [web, http]
+categories: cs web
+tag: [http]
 ---
 
 ## 背景
