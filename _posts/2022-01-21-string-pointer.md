@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "go string使用指针？"
+title:  "go string指针"
 date:   2022-01-21 00:00:00 +0800
 categories: cs
 tag: [go, string, pointer]
