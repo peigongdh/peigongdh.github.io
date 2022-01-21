@@ -10,7 +10,7 @@ tag: [go, string, pointer]
 
 最近开发中观察到业务中使用了大量的string指针，感觉极其别扭  
 之前对go中string的理解是类似于c++的vector这样的容器，已经在内部封装了string header的引用  
-不考虑二级指针的场景，我的理解是没有必要再次对string使用引用来节省空间，这里做了一些验证  
+不考虑二级指针的场景，笔者认为没有必要再次对string使用引用来节省空间，这里做了一些验证  
 
 ## 实验
 
@@ -71,4 +71,6 @@ func main() {
 }
 ```
 
-通过代码可以观察到string的内部结构，发现直接使用string作为参数就可以了，没有必要使用*string  
+## 参考
+
+> https://blog.thinkeridea.com/201902/go/string_ye_shi_yin_yong_lei_xing.html
