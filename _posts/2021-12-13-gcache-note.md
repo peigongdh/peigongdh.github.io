@@ -177,4 +177,4 @@ func (c *LRUCache) getValue(key interface{}, onLoad bool) (interface{}, error) {
 ## LRU的具体实现
 
 参考之前实现的算法题：
-> https://peigongdh.com/posts/lru-cache-146/
+> https://peigongdh.github.io/posts/lru-cache-146/
