@@ -1,0 +1,283 @@
+<!DOCTYPE html><html lang="en" ><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="day-prompt" content="days ago"><meta name="hour-prompt" content="hours ago"><meta name="minute-prompt" content="minutes ago"><meta name="justnow-prompt" content="just now"><meta name="generator" content="Jekyll v4.2.2" /><meta property="og:title" content="跨源资源共享 笔记" /><meta property="og:locale" content="en" /><meta name="description" content="背景" /><meta property="og:description" content="背景" /><link rel="canonical" href="/posts/cors-note/" /><meta property="og:url" content="/posts/cors-note/" /><meta property="og:site_name" content="沛公的小站" /><meta property="og:type" content="article" /><meta property="article:published_time" content="2021-12-29T00:00:00+08:00" /><meta name="twitter:card" content="summary" /><meta property="twitter:title" content="跨源资源共享 笔记" /><meta name="twitter:site" content="@twitter_username" /><meta name="google-site-verification" content="google_meta_tag_verification" /> <script type="application/ld+json"> {"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2021-12-29T15:28:43+08:00","datePublished":"2021-12-29T00:00:00+08:00","description":"背景","headline":"跨源资源共享 笔记","mainEntityOfPage":{"@type":"WebPage","@id":"/posts/cors-note/"},"url":"/posts/cors-note/"}</script><title>跨源资源共享 笔记 | 沛公的小站</title><link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicons/favicon-16x16.png"><link rel="manifest" href="/assets/img/favicons/site.webmanifest"><link rel="shortcut icon" href="/assets/img/favicons/favicon.ico"><meta name="apple-mobile-web-app-title" content="沛公的小站"><meta name="application-name" content="沛公的小站"><meta name="msapplication-TileColor" content="#da532c"><meta name="msapplication-config" content="/assets/img/favicons/browserconfig.xml"><meta name="theme-color" content="#ffffff"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link rel="dns-prefetch" href="https://fonts.gstatic.com"><link rel="preconnect" href="https://www.google-analytics.com" crossorigin="use-credentials"><link rel="dns-prefetch" href="https://www.google-analytics.com"><link rel="preconnect" href="https://www.googletagmanager.com" crossorigin="anonymous"><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="preconnect" href="https://cdn.jsdelivr.net"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.11.2/css/all.min.css"><link rel="stylesheet" href="/assets/css/style.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@1.0.1/dist/bootstrap-toc.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/magnific-popup@1.1.0/dist/magnific-popup.min.css"> <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script><body data-spy="scroll" data-target="#toc"><div id="sidebar" class="d-flex flex-column align-items-end" lang="en"><div class="profile-wrapper text-center"><div id="avatar"> <a href="/" alt="avatar" class="mx-auto"> <img src="https://avatars.githubusercontent.com/u/7733966" alt="avatar" onerror="this.style.display='none'"> </a></div><div class="site-title mt-3"> <a href="/">沛公的小站</a></div><div class="site-subtitle font-italic">沛公写字的地方</div></div><ul class="w-100"><li class="nav-item"> <a href="/" class="nav-link"> <i class="fa-fw fas fa-home ml-xl-3 mr-xl-3 unloaded"></i> <span>HOME</span> </a><li class="nav-item"> <a href="/categories/" class="nav-link"> <i class="fa-fw fas fa-stream ml-xl-3 mr-xl-3 unloaded"></i> <span>CATEGORIES</span> </a><li class="nav-item"> <a href="/tags/" class="nav-link"> <i class="fa-fw fas fa-tags ml-xl-3 mr-xl-3 unloaded"></i> <span>TAGS</span> </a><li class="nav-item"> <a href="/archives/" class="nav-link"> <i class="fa-fw fas fa-archive ml-xl-3 mr-xl-3 unloaded"></i> <span>ARCHIVES</span> </a><li class="nav-item"> <a href="/about/" class="nav-link"> <i class="fa-fw fas fa-info ml-xl-3 mr-xl-3 unloaded"></i> <span>ABOUT</span> </a></ul><div class="sidebar-bottom mt-auto d-flex flex-wrap justify-content-center align-items-center"> <a href="https://github.com/peigongdh" aria-label="github" class="order-3" target="_blank" rel="noopener"> <i class="fab fa-github-alt"></i> </a> <a href=" javascript:location.href = 'mailto:' + ['peigong.dh','qq.com'].join('@')" aria-label="email" class="order-4" > <i class="fas fa-envelope"></i> </a> <span class="icon-border order-2"></span> <span id="mode-toggle-wrapper" class="order-1"> <i class="mode-toggle fas fa-adjust"></i> <script type="text/javascript"> class ModeToggle { static get MODE_KEY() { return "mode"; } static get DARK_MODE() { return "dark"; } static get LIGHT_MODE() { return "light"; } constructor() { if (this.hasMode) { if (this.isDarkMode) { if (!this.isSysDarkPrefer) { this.setDark(); } } else { if (this.isSysDarkPrefer) { this.setLight(); } } } var self = this; /* always follow the system prefers */ this.sysDarkPrefers.addListener(function() { if (self.hasMode) { if (self.isDarkMode) { if (!self.isSysDarkPrefer) { self.setDark(); } } else { if (self.isSysDarkPrefer) { self.setLight(); } } self.clearMode(); } self.updateMermaid(); }); } /* constructor() */ setDark() { $('html').attr(ModeToggle.MODE_KEY, ModeToggle.DARK_MODE); sessionStorage.setItem(ModeToggle.MODE_KEY, ModeToggle.DARK_MODE); } setLight() { $('html').attr(ModeToggle.MODE_KEY, ModeToggle.LIGHT_MODE); sessionStorage.setItem(ModeToggle.MODE_KEY, ModeToggle.LIGHT_MODE); } clearMode() { $('html').removeAttr(ModeToggle.MODE_KEY); sessionStorage.removeItem(ModeToggle.MODE_KEY); } get sysDarkPrefers() { return window.matchMedia("(prefers-color-scheme: dark)"); } get isSysDarkPrefer() { return this.sysDarkPrefers.matches; } get isDarkMode() { return this.mode == ModeToggle.DARK_MODE; } get isLightMode() { return this.mode == ModeToggle.LIGHT_MODE; } get hasMode() { return this.mode != null; } get mode() { return sessionStorage.getItem(ModeToggle.MODE_KEY); } /* get the current mode on screen */ get modeStatus() { if (this.isDarkMode || (!this.hasMode && this.isSysDarkPrefer) ) { return ModeToggle.DARK_MODE; } else { return ModeToggle.LIGHT_MODE; } } updateMermaid() { if (typeof mermaid !== "undefined") { let expectedTheme = (this.modeStatus === ModeToggle.DARK_MODE? "dark" : "default"); let config = { theme: expectedTheme }; /* re-render the SVG › <https://github.com/mermaid-js/mermaid/issues/311#issuecomment-332557344> */ $(".mermaid").each(function() { let svgCode = $(this).prev().children().html(); $(this).removeAttr("data-processed"); $(this).html(svgCode); }); mermaid.initialize(config); mermaid.init(undefined, ".mermaid"); } } flipMode() { if (this.hasMode) { if (this.isSysDarkPrefer) { if (this.isLightMode) { this.clearMode(); } else { this.setLight(); } } else { if (this.isDarkMode) { this.clearMode(); } else { this.setDark(); } } } else { if (this.isSysDarkPrefer) { this.setLight(); } else { this.setDark(); } } this.updateMermaid(); } /* flipMode() */ } /* ModeToggle */ let toggle = new ModeToggle(); $(".mode-toggle").click(function() { toggle.flipMode(); }); </script> </span></div></div><div id="topbar-wrapper" class="row justify-content-center topbar-down"><div id="topbar" class="col-11 d-flex h-100 align-items-center justify-content-between"> <span id="breadcrumb"> <span> <a href="/"> Home </a> </span> <span>跨源资源共享 笔记</span> </span> <i id="sidebar-trigger" class="fas fa-bars fa-fw"></i><div id="topbar-title"> Post</div><i id="search-trigger" class="fas fa-search fa-fw"></i> <span id="search-wrapper" class="align-items-center"> <i class="fas fa-search fa-fw"></i> <input class="form-control" id="search-input" type="search" aria-label="search" autocomplete="off" placeholder="Search..."> <i class="fa fa-times-circle fa-fw" id="search-cleaner"></i> </span> <span id="search-cancel" >Cancel</span></div></div><div id="main-wrapper"><div id="main"><div class="row"><div id="post-wrapper" class="col-12 col-lg-11 col-xl-8"><div class="post pl-1 pr-1 pl-sm-2 pr-sm-2 pl-md-4 pr-md-4"><h1 data-toc-skip>跨源资源共享 笔记</h1><div class="post-meta text-muted d-flex flex-column"><div> <span class="semi-bold"> peigong </span> on <span class="timeago " data-toggle="tooltip" data-placement="bottom" title="Wed, Dec 29, 2021, 12:00 AM +0800" >Dec 29, 2021<i class="unloaded">2021-12-29T00:00:00+08:00</i> </span></div><div> <span> Updated <span class="timeago lastmod" data-toggle="tooltip" data-placement="bottom" title="Wed, Dec 29, 2021, 3:28 PM +0800" >Dec 29, 2021<i class="unloaded">2021-12-29T15:28:43+08:00</i> </span> </span> <span class="readtime" data-toggle="tooltip" data-placement="bottom" title="1920 words">10 min read</span></div></div><div class="post-content"><h2 id="背景">背景</h2><p>日常在开发过程中经常遇到CORS相关的错误，解决方案也一直比较模糊，这次一起来把跨域相关的内容做一次梳理</p><ul><li>Q：什么是跨域？<li><p>A：跨源HTTP请求的一个例子：运行在 https://domain-a.com 的 JavaScript 代码使用 XMLHttpRequest 来发起一个到 https://domain-b.com/data.json 的请求。</p><li>Q：为什么要做跨域的限制？<li>A：出于安全性，浏览器限制脚本内发起的跨源HTTP请求。 例如，XMLHttpRequest 和 Fetch API 遵循同源策略。这意味着使用这些 API 的 Web 应用程序只能从加载应用程序的同一个域请求 HTTP 资源。<li><p>A：补充：考虑某个钓鱼网站A抓包模拟了网站B的API，A伪装B，误导用户在A中填写B的表单（例如账号密码），如果没有跨域的保护（这一步是在浏览器主动做出的限制），那么就存在很明显的安全隐患。</p><li>Q：现在主流的前后端开发分离，前后端的域名经常存在不同的情况，如何解决跨域问题？<li>A：使用CORS，也就是跨域资源共享的方案，CORS是一个W3C标准，目的就是解决此类跨域共享的问题。</ul><h2 id="简单请求">简单请求</h2><p>比如说，假如站点 https://foo.example 的网页应用想要访问 https://bar.other 的资源。foo.example 的网页中可能包含类似于下面的 JavaScript 代码：</p><div class="language-js highlighter-rouge"><div class="code-header"> <span text-data=" JavaScript "><i class="fa-fw fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre><td class="rouge-code"><pre><span class="kd">const</span> <span class="nx">xhr</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">XMLHttpRequest</span><span class="p">();</span>
+<span class="kd">const</span> <span class="nx">url</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">https://bar.other/resources/public-data/</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET</span><span class="dl">'</span><span class="p">,</span> <span class="nx">url</span><span class="p">);</span>
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">onreadystatechange</span> <span class="o">=</span> <span class="nx">someHandler</span><span class="p">;</span>
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">send</span><span class="p">();</span>
+</pre></table></code></div></div><p>以下是浏览器发送给服务器的请求报文：</p><div class="language-plaintext highlighter-rouge"><div class="code-header"> <span text-data=" Plaintext "><i class="fa-fw fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre><td class="rouge-code"><pre>GET /resources/public-data/ HTTP/1.1
+Host: bar.other
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:71.0) Gecko/20100101 Firefox/71.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-us,en;q=0.5
+Accept-Encoding: gzip,deflate
+Connection: keep-alive
+Origin: https://foo.example
+</pre></table></code></div></div><p>请求首部字段 Origin 表明该请求来源于 http://foo.example。</p><div class="language-plaintext highlighter-rouge"><div class="code-header"> <span text-data=" Plaintext "><i class="fa-fw fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre><td class="rouge-code"><pre>HTTP/1.1 200 OK
+Date: Mon, 01 Dec 2008 00:23:53 GMT
+Server: Apache/2
+Access-Control-Allow-Origin: *
+Keep-Alive: timeout=2, max=100
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+Content-Type: application/xml
+[XML Data]
+</pre></table></code></div></div><p>本例中，服务端返回的 Access-Control-Allow-Origin: * 表明，该资源可以被 任意 外域访问。</p><div class="language-plaintext highlighter-rouge"><div class="code-header"> <span text-data=" Plaintext "><i class="fa-fw fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre><td class="rouge-code"><pre>Access-Control-Allow-Origin: *  
+</pre></table></code></div></div><p>使用 Origin 和 Access-Control-Allow-Origin 就能完成最简单的访问控制。如果服务端仅允许来自 https://foo.example 的访问，该首部字段的内容如下：</p><div class="language-plaintext highlighter-rouge"><div class="code-header"> <span text-data=" Plaintext "><i class="fa-fw fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre><td class="rouge-code"><pre>Access-Control-Allow-Origin: https://foo.example
+</pre></table></code></div></div><h2 id="预检请求">预检请求</h2><p>与前述简单请求不同，“需预检的请求”要求必须首先使用 OPTIONS 方法发起一个预检请求到服务器，以获知服务器是否允许该实际请求。”预检请求“的使用，可以避免跨域请求对服务器的用户数据产生未预期的影响。<br /> 如下是一个需要执行预检请求的 HTTP 请求：</p><div class="language-js highlighter-rouge"><div class="code-header"> <span text-data=" JavaScript "><i class="fa-fw fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre><td class="rouge-code"><pre><span class="kd">const</span> <span class="nx">xhr</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">XMLHttpRequest</span><span class="p">();</span>
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="dl">'</span><span class="s1">POST</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">https://bar.other/resources/post-here/</span><span class="dl">'</span><span class="p">);</span>
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">setRequestHeader</span><span class="p">(</span><span class="dl">'</span><span class="s1">X-PINGOTHER</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">pingpong</span><span class="dl">'</span><span class="p">);</span>
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">setRequestHeader</span><span class="p">(</span><span class="dl">'</span><span class="s1">Content-Type</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">application/xml</span><span class="dl">'</span><span class="p">);</span>
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">onreadystatechange</span> <span class="o">=</span> <span class="nx">handler</span><span class="p">;</span>
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="dl">'</span><span class="s1">&lt;person&gt;&lt;name&gt;Arun&lt;/name&gt;&lt;/person&gt;</span><span class="dl">'</span><span class="p">);</span>
+</pre></table></code></div></div><p>下面是服务端和客户端完整的信息交互。首次交互是 预检请求/响应：</p><div class="language-plaintext highlighter-rouge"><div class="code-header"> <span text-data=" Plaintext "><i class="fa-fw fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+</pre><td class="rouge-code"><pre>OPTIONS /doc HTTP/1.1
+Host: bar.other
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:71.0) Gecko/20100101 Firefox/71.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-us,en;q=0.5
+Accept-Encoding: gzip,deflate
+Connection: keep-alive
+Origin: https://foo.example
+Access-Control-Request-Method: POST
+Access-Control-Request-Headers: X-PINGOTHER, Content-Type
+
+HTTP/1.1 204 No Content
+Date: Mon, 01 Dec 2008 01:15:39 GMT
+Server: Apache/2
+Access-Control-Allow-Origin: https://foo.example
+Access-Control-Allow-Methods: POST, GET, OPTIONS
+Access-Control-Allow-Headers: X-PINGOTHER, Content-Type
+Access-Control-Max-Age: 86400
+Vary: Accept-Encoding, Origin
+Keep-Alive: timeout=2, max=100
+Connection: Keep-Alive
+</pre></table></code></div></div><p>浏览器检测到，从 JavaScript 中发起的请求需要被预检。从上面的报文中，我们看到，第 1~10 行发送了一个使用 OPTIONS 方法 的“预检请求”。OPTIONS 是 HTTP/1.1 协议中定义的方法，用以从服务器获取更多信息。该方法不会对服务器资源产生影响。 预检请求中同时携带了下面两个首部字段：</p><div class="language-plaintext highlighter-rouge"><div class="code-header"> <span text-data=" Plaintext "><i class="fa-fw fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre><td class="rouge-code"><pre>Access-Control-Request-Method: POST
+Access-Control-Request-Headers: X-PINGOTHER, Content-Type
+</pre></table></code></div></div><p>首部字段 Access-Control-Request-Method 告知服务器，实际请求将使用 POST 方法。首部字段 Access-Control-Request-Headers 告知服务器，实际请求将携带两个自定义请求首部字段：X-PINGOTHER 与 Content-Type。服务器据此决定，该实际请求是否被允许。<br /> 第 13~22 行为预检请求的响应，表明服务器将接受后续的实际请求。重点看第 16~19 行：</p><div class="language-plaintext highlighter-rouge"><div class="code-header"> <span text-data=" Plaintext "><i class="fa-fw fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre><td class="rouge-code"><pre>Access-Control-Allow-Origin: https://foo.example
+Access-Control-Allow-Methods: POST, GET, OPTIONS
+Access-Control-Allow-Headers: X-PINGOTHER, Content-Type
+Access-Control-Max-Age: 86400
+</pre></table></code></div></div><p>服务器的响应携带了 Access-Control-Allow-Origin: https://foo.example，从而限制请求的源域。同时，携带的 Access-Control-Allow-Methods 表明服务器允许客户端使用 POST 和 GET 方法发起请求（与 Allow 响应首部类似，但其具有严格的访问控制）。<br /> 首部字段 Access-Control-Allow-Headers 表明服务器允许请求中携带字段 X-PINGOTHER 与 Content-Type。与 Access-Control-Allow-Methods 一样，Access-Control-Allow-Headers 的值为逗号分割的列表。<br /> 最后，首部字段 Access-Control-Max-Age 表明该响应的有效时间为 86400 秒，也就是 24 小时。在有效时间内，浏览器无须为同一请求再次发起预检请求。请注意，浏览器自身维护了一个 最大有效时间，如果该首部字段的值超过了最大有效时间，将不会生效。</p><p>预检请求完成之后，发送实际请求：</p><div class="language-plaintext highlighter-rouge"><div class="code-header"> <span text-data=" Plaintext "><i class="fa-fw fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+</pre><td class="rouge-code"><pre>POST /doc HTTP/1.1
+Host: bar.other
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:71.0) Gecko/20100101 Firefox/71.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-us,en;q=0.5
+Accept-Encoding: gzip,deflate
+Connection: keep-alive
+X-PINGOTHER: pingpong
+Content-Type: text/xml; charset=UTF-8
+Referer: https://foo.example/examples/preflightInvocation.html
+Content-Length: 55
+Origin: https://foo.example
+Pragma: no-cache
+Cache-Control: no-cache
+
+&lt;person&gt;&lt;name&gt;Arun&lt;/name&gt;&lt;/person&gt;
+
+HTTP/1.1 200 OK
+Date: Mon, 01 Dec 2008 01:15:40 GMT
+Server: Apache/2
+Access-Control-Allow-Origin: https://foo.example
+Vary: Accept-Encoding, Origin
+Content-Encoding: gzip
+Content-Length: 235
+Keep-Alive: timeout=2, max=99
+Connection: Keep-Alive
+Content-Type: text/plain
+
+[Some XML payload]
+</pre></table></code></div></div><h2 id="附带身份凭证的请求">附带身份凭证的请求</h2><p>XMLHttpRequest 或 Fetch 与 CORS 的一个有趣的特性是，可以基于 HTTP cookies 和 HTTP 认证信息发送身份凭证。一般而言，对于跨源 XMLHttpRequest 或 Fetch 请求，浏览器 不会 发送身份凭证信息。如果要发送凭证信息，需要设置 XMLHttpRequest 的某个特殊标志位。</p><p>本例中，https://foo.example 的某脚本向 https://bar.other 发起一个GET 请求，并设置 Cookies：</p><div class="language-js highlighter-rouge"><div class="code-header"> <span text-data=" JavaScript "><i class="fa-fw fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre><td class="rouge-code"><pre><span class="kd">const</span> <span class="nx">invocation</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">XMLHttpRequest</span><span class="p">();</span>
+<span class="kd">const</span> <span class="nx">url</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">https://bar.other/resources/credentialed-content/</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">function</span> <span class="nx">callOtherDomain</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">invocation</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">invocation</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET</span><span class="dl">'</span><span class="p">,</span> <span class="nx">url</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+    <span class="nx">invocation</span><span class="p">.</span><span class="nx">withCredentials</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+    <span class="nx">invocation</span><span class="p">.</span><span class="nx">onreadystatechange</span> <span class="o">=</span> <span class="nx">handler</span><span class="p">;</span>
+    <span class="nx">invocation</span><span class="p">.</span><span class="nx">send</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></table></code></div></div><p>第 7 行将 XMLHttpRequest 的 withCredentials 标志设置为 true，从而向服务器发送 Cookies。因为这是一个简单 GET 请求，所以浏览器不会对其发起“预检请求”。但是，如果服务器端的响应中未携带 Access-Control-Allow-Credentials: true，浏览器将不会把响应内容返回给请求的发送者。</p><p>客户端与服务器端交互示例如下：</p><div class="language-plaintext highlighter-rouge"><div class="code-header"> <span text-data=" Plaintext "><i class="fa-fw fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+</pre><td class="rouge-code"><pre>GET /resources/credentialed-content/ HTTP/1.1
+Host: bar.other
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:71.0) Gecko/20100101 Firefox/71.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-us,en;q=0.5
+Accept-Encoding: gzip,deflate
+Connection: keep-alive
+Referer: https://foo.example/examples/credential.html
+Origin: https://foo.example
+Cookie: pageAccess=2
+
+HTTP/1.1 200 OK
+Date: Mon, 01 Dec 2008 01:34:52 GMT
+Server: Apache/2
+Access-Control-Allow-Origin: https://foo.example
+Access-Control-Allow-Credentials: true
+Cache-Control: no-cache
+Pragma: no-cache
+Set-Cookie: pageAccess=3; expires=Wed, 31-Dec-2008 01:34:53 GMT
+Vary: Accept-Encoding, Origin
+Content-Encoding: gzip
+Content-Length: 106
+Keep-Alive: timeout=2, max=100
+Connection: Keep-Alive
+Content-Type: text/plain
+
+[text/plain payload]
+</pre></table></code></div></div><p>即使第 10 行指定了 Cookie 的相关信息，但是，如果 https://bar.other 的响应中缺失 Access-Control-Allow-Credentials: true（第 17 行），则响应内容不会返回给请求的发起者。</p><h2 id="服务端实践">服务端实践</h2><p>日常开发中，以go/gin为例，我们常常这样设置中间件解决问题：</p><div class="language-go highlighter-rouge"><div class="code-header"> <span text-data=" Go "><i class="fa-fw fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+</pre><td class="rouge-code"><pre><span class="k">func</span> <span class="n">Cors</span><span class="p">()</span> <span class="n">gin</span><span class="o">.</span><span class="n">HandlerFunc</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">func</span><span class="p">(</span><span class="n">c</span> <span class="o">*</span><span class="n">gin</span><span class="o">.</span><span class="n">Context</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">method</span> <span class="o">:=</span> <span class="n">c</span><span class="o">.</span><span class="n">Request</span><span class="o">.</span><span class="n">Method</span>
+        <span class="k">if</span> <span class="n">origin</span> <span class="o">!=</span> <span class="s">""</span> <span class="p">{</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">Header</span><span class="p">(</span><span class="s">"Access-Control-Allow-Origin"</span><span class="p">,</span> <span class="s">"*"</span><span class="p">)</span> 
+            <span class="n">c</span><span class="o">.</span><span class="n">Header</span><span class="p">(</span><span class="s">"Access-Control-Allow-Methods"</span><span class="p">,</span> <span class="s">"POST, GET, OPTIONS, PUT, DELETE, UPDATE"</span><span class="p">)</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">Header</span><span class="p">(</span><span class="s">"Access-Control-Allow-Headers"</span><span class="p">,</span> <span class="s">"Origin, X-Requested-With, Content-Type, Accept, Authorization"</span><span class="p">)</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">Header</span><span class="p">(</span><span class="s">"Access-Control-Expose-Headers"</span><span class="p">,</span> <span class="s">"Content-Length, Access-Control-Allow-Origin, Access-Control-Allow-Headers, Cache-Control, Content-Language, Content-Type"</span><span class="p">)</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">Header</span><span class="p">(</span><span class="s">"Access-Control-Allow-Credentials"</span><span class="p">,</span> <span class="s">"true"</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s">"OPTIONS"</span> <span class="p">{</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">AbortWithStatus</span><span class="p">(</span><span class="n">http</span><span class="o">.</span><span class="n">StatusNoContent</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">Next</span><span class="p">()</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></table></code></div></div><h2 id="参考">参考</h2><blockquote><p>https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CORS <br /> https://www.ruanyifeng.com/blog/2016/04/cors.html</p></blockquote></div><div class="post-tail-wrapper text-muted"><div class="post-meta mb-3"> <i class="far fa-folder-open fa-fw mr-1"></i> <a href='/categories/cs/'>cs</a>, <a href='/categories/web/'>web</a></div><div class="post-tags"> <i class="fa fa-tags fa-fw mr-1"></i> <a href="/tags/http/" class="post-tag no-text-decoration" >http</a> <a href="/tags/cors/" class="post-tag no-text-decoration" >cors</a></div><div class="post-tail-bottom d-flex justify-content-between align-items-center mt-3 pt-5 pb-2"><div class="license-wrapper"> This post is licensed under <a href="https://creativecommons.org/licenses/by/4.0/"> CC BY 4.0 </a> by the author.</div><div class="share-wrapper"> <span class="share-label text-muted mr-1">Share</span> <span class="share-icons"> <i id="copy-link" class="fa-fw fas fa-link small" data-toggle="tooltip" data-placement="top" title="Copy link" title-succeed="Link copied successfully!"> </i> </span></div></div></div></div></div><div id="panel-wrapper" class="col-xl-3 pl-2 text-muted topbar-down"><div class="access"><div id="access-lastmod" class="post"> <span>Recent Update</span><ul class="post-content pl-0 pb-1 ml-1 mt-2"><li><a href="/posts/gcache-note/">gcache源码阅读 笔记</a><li><a href="/posts/send-on-closed-channel/">go向关闭的channel发送数据bug修复</a><li><a href="/posts/string-pointer/">go string指针</a><li><a href="/posts/http-get-params-list/">http get列表参数 笔记</a><li><a href="/posts/cors-note/">跨源资源共享 笔记</a></ul></div><div id="access-tags"> <span>Trending Tags</span><div class="d-flex flex-wrap mt-3 mb-1 mr-3"> <a class="post-tag" href="/tags/go/">go</a> <a class="post-tag" href="/tags/http/">http</a> <a class="post-tag" href="/tags/nsq/">nsq</a> <a class="post-tag" href="/tags/stack/">stack</a> <a class="post-tag" href="/tags/tcp/">tcp</a> <a class="post-tag" href="/tags/file/">file</a> <a class="post-tag" href="/tags/jekyll/">jekyll</a> <a class="post-tag" href="/tags/mq/">mq</a> <a class="post-tag" href="/tags/queue/">queue</a> <a class="post-tag" href="/tags/sort/">sort</a></div></div></div><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@1.0.1/dist/bootstrap-toc.min.js"></script><div id="toc-wrapper" class="pl-0 pr-4 mb-5"> <span class="pl-3 pt-2 mb-2">Contents</span><nav id="toc" data-toggle="toc"></nav></div></div></div><div class="row"><div class="col-12 col-lg-11 col-xl-8"><div id="post-extend-wrapper" class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-md-4 pr-md-4"><div id="related-posts" class="mt-5 mb-2 mb-sm-4"><h3 class="pt-2 mt-1 mb-4 ml-1" data-toc-skip>Further Reading</h3><div class="card-deck mb-4"><div class="card"> <a href="/posts/http-get-params-list/"><div class="card-body"> <span class="timeago small" >Dec 23, 2021<i class="unloaded">2021-12-23T00:00:00+08:00</i> </span><h3 class="pt-0 mt-1 mb-3" data-toc-skip>http get列表参数 笔记</h3><div class="text-muted small"><p> 背景 考虑在http中使用get传递列表类型的参数，在网上很容易找到如下例子： ?k[]=2&amp;k[]=3 ?k=2&amp;k=3 我们通过测试来验证： 测试 使用gin： package main import "github.com/gin-gonic/gin" func main() { r := gin.Default() r.GET("/xg...</p></div></div></a></div><div class="card"> <a href="/posts/go-http-note-1/"><div class="card-body"> <span class="timeago small" >Sep 26, 2021<i class="unloaded">2021-09-26T00:00:00+08:00</i> </span><h3 class="pt-0 mt-1 mb-3" data-toc-skip>http in go 笔记1</h3><div class="text-muted small"><p> http in go 从入口开始看 // ListenAndServe listens on the TCP network address addr and then calls // Serve with handler to handle requests on incoming connections. // Accepted connections are configured ...</p></div></div></a></div><div class="card"> <a href="/posts/go-http-note-2/"><div class="card-body"> <span class="timeago small" >Sep 26, 2021<i class="unloaded">2021-09-26T00:00:00+08:00</i> </span><h3 class="pt-0 mt-1 mb-3" data-toc-skip>http in go 笔记2</h3><div class="text-muted small"><p> 问题 一个 TCP 连接可以发多少个 HTTP 请求 要搞懂这个问题，我们需要先解决下面五个问题： 0、现代浏览器在与服务器建立了一个 TCP 连接后是否会在一个 HTTP 请求完成后断开？什么情况下会断开？ 1、一个 TCP 连接可以对应几个 HTTP 请求？ 2、一个 TCP 连接中 HTTP 请求发送可以一起发送么（比如一起发三个请求，再三个响应一起接收）？ 3、...</p></div></div></a></div></div></div><div class="post-navigation d-flex justify-content-between"> <a href="/posts/http-get-params-list/" class="btn btn-outline-primary" prompt="Older"><p>http get列表参数 笔记</p></a> <a href="/posts/git-practice-note/" class="btn btn-outline-primary" prompt="Newer"><p>git实践 笔记</p></a></div></div></div></div><footer class="d-flex w-100 justify-content-center"><div class="d-flex justify-content-between align-items-center"><div class="footer-left"><p class="mb-0"> © 2022 <a href="https://github.com/peigongdh">peigong</a>. <span data-toggle="tooltip" data-placement="top" title="Except where otherwise noted, the blog posts on this site are licensed under the Creative Commons Attribution 4.0 International (CC BY 4.0) License by the author.">Some rights reserved.</span></p></div><div class="footer-right"><p class="mb-0"> Powered by <a href="https://jekyllrb.com" target="_blank" rel="noopener">Jekyll</a> with <a href="https://github.com/cotes2020/jekyll-theme-chirpy" target="_blank" rel="noopener">Chirpy</a> theme.</p></div></div></footer></div><div id="search-result-wrapper" class="d-flex justify-content-center unloaded"><div class="col-12 col-sm-11 post-content"><div id="search-hints"><h4 class="text-muted mb-4">Trending Tags</h4><a class="post-tag" href="/tags/go/">go</a> <a class="post-tag" href="/tags/http/">http</a> <a class="post-tag" href="/tags/nsq/">nsq</a> <a class="post-tag" href="/tags/stack/">stack</a> <a class="post-tag" href="/tags/tcp/">tcp</a> <a class="post-tag" href="/tags/file/">file</a> <a class="post-tag" href="/tags/jekyll/">jekyll</a> <a class="post-tag" href="/tags/mq/">mq</a> <a class="post-tag" href="/tags/queue/">queue</a> <a class="post-tag" href="/tags/sort/">sort</a></div><div id="search-results" class="d-flex flex-wrap justify-content-center text-muted mt-3"></div></div></div></div><div id="mask"></div><a id="back-to-top" href="#" aria-label="back-to-top" class="btn btn-lg btn-box-shadow" role="button"> <i class="fas fa-angle-up"></i> </a> <script src="https://cdn.jsdelivr.net/npm/simple-jekyll-search@1.10.0/dest/simple-jekyll-search.min.js"></script> <script> SimpleJekyllSearch({ searchInput: document.getElementById('search-input'), resultsContainer: document.getElementById('search-results'), json: '/assets/js/data/search.json', searchResultTemplate: '<div class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-lg-4 pr-lg-4 pl-xl-0 pr-xl-0"> <a href="{url}">{title}</a><div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1"> {categories} {tags}</div><p>{snippet}</p></div>', noResultsText: '<p class="mt-5">Oops! No result founds.</p>', templateMiddleware: function(prop, value, template) { if (prop === 'categories') { if (value === '') { return `${value}`; } else { return `<div class="mr-sm-4"><i class="far fa-folder fa-fw"></i>${value}</div>`; } } if (prop === 'tags') { if (value === '') { return `${value}`; } else { return `<div><i class="fa fa-tag fa-fw"></i>${value}</div>`; } } } }); </script> <script src="https://cdn.jsdelivr.net/combine/npm/lozad/dist/lozad.min.js,npm/magnific-popup@1/dist/jquery.magnific-popup.min.js,npm/clipboard@2/dist/clipboard.min.js"></script> <script defer src="/assets/js/dist/post.min.js"></script> <script src="https://cdn.jsdelivr.net/combine/npm/popper.js@1.16.1,npm/bootstrap@4/dist/js/bootstrap.min.js"></script> <script defer src="/app.js"></script> <script defer src="https://www.googletagmanager.com/gtag/js?id="></script> <script> document.addEventListener("DOMContentLoaded", function(event) { window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', ''); }); </script>

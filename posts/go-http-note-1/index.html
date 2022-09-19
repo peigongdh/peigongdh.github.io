@@ -1,0 +1,1069 @@
+<!DOCTYPE html><html lang="en" ><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="day-prompt" content="days ago"><meta name="hour-prompt" content="hours ago"><meta name="minute-prompt" content="minutes ago"><meta name="justnow-prompt" content="just now"><meta name="generator" content="Jekyll v4.2.2" /><meta property="og:title" content="http in go 笔记1" /><meta property="og:locale" content="en" /><meta name="description" content="http in go" /><meta property="og:description" content="http in go" /><link rel="canonical" href="/posts/go-http-note-1/" /><meta property="og:url" content="/posts/go-http-note-1/" /><meta property="og:site_name" content="沛公的小站" /><meta property="og:type" content="article" /><meta property="article:published_time" content="2021-09-26T00:00:00+08:00" /><meta name="twitter:card" content="summary" /><meta property="twitter:title" content="http in go 笔记1" /><meta name="twitter:site" content="@twitter_username" /><meta name="google-site-verification" content="google_meta_tag_verification" /> <script type="application/ld+json"> {"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2021-09-27T15:48:18+08:00","datePublished":"2021-09-26T00:00:00+08:00","description":"http in go","headline":"http in go 笔记1","mainEntityOfPage":{"@type":"WebPage","@id":"/posts/go-http-note-1/"},"url":"/posts/go-http-note-1/"}</script><title>http in go 笔记1 | 沛公的小站</title><link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicons/favicon-16x16.png"><link rel="manifest" href="/assets/img/favicons/site.webmanifest"><link rel="shortcut icon" href="/assets/img/favicons/favicon.ico"><meta name="apple-mobile-web-app-title" content="沛公的小站"><meta name="application-name" content="沛公的小站"><meta name="msapplication-TileColor" content="#da532c"><meta name="msapplication-config" content="/assets/img/favicons/browserconfig.xml"><meta name="theme-color" content="#ffffff"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link rel="dns-prefetch" href="https://fonts.gstatic.com"><link rel="preconnect" href="https://www.google-analytics.com" crossorigin="use-credentials"><link rel="dns-prefetch" href="https://www.google-analytics.com"><link rel="preconnect" href="https://www.googletagmanager.com" crossorigin="anonymous"><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="preconnect" href="https://cdn.jsdelivr.net"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.11.2/css/all.min.css"><link rel="stylesheet" href="/assets/css/style.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@1.0.1/dist/bootstrap-toc.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/magnific-popup@1.1.0/dist/magnific-popup.min.css"> <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script><body data-spy="scroll" data-target="#toc"><div id="sidebar" class="d-flex flex-column align-items-end" lang="en"><div class="profile-wrapper text-center"><div id="avatar"> <a href="/" alt="avatar" class="mx-auto"> <img src="https://avatars.githubusercontent.com/u/7733966" alt="avatar" onerror="this.style.display='none'"> </a></div><div class="site-title mt-3"> <a href="/">沛公的小站</a></div><div class="site-subtitle font-italic">沛公写字的地方</div></div><ul class="w-100"><li class="nav-item"> <a href="/" class="nav-link"> <i class="fa-fw fas fa-home ml-xl-3 mr-xl-3 unloaded"></i> <span>HOME</span> </a><li class="nav-item"> <a href="/categories/" class="nav-link"> <i class="fa-fw fas fa-stream ml-xl-3 mr-xl-3 unloaded"></i> <span>CATEGORIES</span> </a><li class="nav-item"> <a href="/tags/" class="nav-link"> <i class="fa-fw fas fa-tags ml-xl-3 mr-xl-3 unloaded"></i> <span>TAGS</span> </a><li class="nav-item"> <a href="/archives/" class="nav-link"> <i class="fa-fw fas fa-archive ml-xl-3 mr-xl-3 unloaded"></i> <span>ARCHIVES</span> </a><li class="nav-item"> <a href="/about/" class="nav-link"> <i class="fa-fw fas fa-info ml-xl-3 mr-xl-3 unloaded"></i> <span>ABOUT</span> </a></ul><div class="sidebar-bottom mt-auto d-flex flex-wrap justify-content-center align-items-center"> <a href="https://github.com/peigongdh" aria-label="github" class="order-3" target="_blank" rel="noopener"> <i class="fab fa-github-alt"></i> </a> <a href=" javascript:location.href = 'mailto:' + ['peigong.dh','qq.com'].join('@')" aria-label="email" class="order-4" > <i class="fas fa-envelope"></i> </a> <span class="icon-border order-2"></span> <span id="mode-toggle-wrapper" class="order-1"> <i class="mode-toggle fas fa-adjust"></i> <script type="text/javascript"> class ModeToggle { static get MODE_KEY() { return "mode"; } static get DARK_MODE() { return "dark"; } static get LIGHT_MODE() { return "light"; } constructor() { if (this.hasMode) { if (this.isDarkMode) { if (!this.isSysDarkPrefer) { this.setDark(); } } else { if (this.isSysDarkPrefer) { this.setLight(); } } } var self = this; /* always follow the system prefers */ this.sysDarkPrefers.addListener(function() { if (self.hasMode) { if (self.isDarkMode) { if (!self.isSysDarkPrefer) { self.setDark(); } } else { if (self.isSysDarkPrefer) { self.setLight(); } } self.clearMode(); } self.updateMermaid(); }); } /* constructor() */ setDark() { $('html').attr(ModeToggle.MODE_KEY, ModeToggle.DARK_MODE); sessionStorage.setItem(ModeToggle.MODE_KEY, ModeToggle.DARK_MODE); } setLight() { $('html').attr(ModeToggle.MODE_KEY, ModeToggle.LIGHT_MODE); sessionStorage.setItem(ModeToggle.MODE_KEY, ModeToggle.LIGHT_MODE); } clearMode() { $('html').removeAttr(ModeToggle.MODE_KEY); sessionStorage.removeItem(ModeToggle.MODE_KEY); } get sysDarkPrefers() { return window.matchMedia("(prefers-color-scheme: dark)"); } get isSysDarkPrefer() { return this.sysDarkPrefers.matches; } get isDarkMode() { return this.mode == ModeToggle.DARK_MODE; } get isLightMode() { return this.mode == ModeToggle.LIGHT_MODE; } get hasMode() { return this.mode != null; } get mode() { return sessionStorage.getItem(ModeToggle.MODE_KEY); } /* get the current mode on screen */ get modeStatus() { if (this.isDarkMode || (!this.hasMode && this.isSysDarkPrefer) ) { return ModeToggle.DARK_MODE; } else { return ModeToggle.LIGHT_MODE; } } updateMermaid() { if (typeof mermaid !== "undefined") { let expectedTheme = (this.modeStatus === ModeToggle.DARK_MODE? "dark" : "default"); let config = { theme: expectedTheme }; /* re-render the SVG › <https://github.com/mermaid-js/mermaid/issues/311#issuecomment-332557344> */ $(".mermaid").each(function() { let svgCode = $(this).prev().children().html(); $(this).removeAttr("data-processed"); $(this).html(svgCode); }); mermaid.initialize(config); mermaid.init(undefined, ".mermaid"); } } flipMode() { if (this.hasMode) { if (this.isSysDarkPrefer) { if (this.isLightMode) { this.clearMode(); } else { this.setLight(); } } else { if (this.isDarkMode) { this.clearMode(); } else { this.setDark(); } } } else { if (this.isSysDarkPrefer) { this.setLight(); } else { this.setDark(); } } this.updateMermaid(); } /* flipMode() */ } /* ModeToggle */ let toggle = new ModeToggle(); $(".mode-toggle").click(function() { toggle.flipMode(); }); </script> </span></div></div><div id="topbar-wrapper" class="row justify-content-center topbar-down"><div id="topbar" class="col-11 d-flex h-100 align-items-center justify-content-between"> <span id="breadcrumb"> <span> <a href="/"> Home </a> </span> <span>http in go 笔记1</span> </span> <i id="sidebar-trigger" class="fas fa-bars fa-fw"></i><div id="topbar-title"> Post</div><i id="search-trigger" class="fas fa-search fa-fw"></i> <span id="search-wrapper" class="align-items-center"> <i class="fas fa-search fa-fw"></i> <input class="form-control" id="search-input" type="search" aria-label="search" autocomplete="off" placeholder="Search..."> <i class="fa fa-times-circle fa-fw" id="search-cleaner"></i> </span> <span id="search-cancel" >Cancel</span></div></div><div id="main-wrapper"><div id="main"><div class="row"><div id="post-wrapper" class="col-12 col-lg-11 col-xl-8"><div class="post pl-1 pr-1 pl-sm-2 pr-sm-2 pl-md-4 pr-md-4"><h1 data-toc-skip>http in go 笔记1</h1><div class="post-meta text-muted d-flex flex-column"><div> <span class="semi-bold"> peigong </span> on <span class="timeago " data-toggle="tooltip" data-placement="bottom" title="Sun, Sep 26, 2021, 12:00 AM +0800" >Sep 26, 2021<i class="unloaded">2021-09-26T00:00:00+08:00</i> </span></div><div> <span> Updated <span class="timeago lastmod" data-toggle="tooltip" data-placement="bottom" title="Mon, Sep 27, 2021, 3:48 PM +0800" >Sep 27, 2021<i class="unloaded">2021-09-27T15:48:18+08:00</i> </span> </span> <span class="readtime" data-toggle="tooltip" data-placement="bottom" title="2906 words">16 min read</span></div></div><div class="post-content"><h2 id="http-in-go">http in go</h2><p>从入口开始看</p><div class="language-go highlighter-rouge"><div class="code-header"> <span text-data=" Go "><i class="fa-fw fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre><td class="rouge-code"><pre><span class="c">// ListenAndServe listens on the TCP network address addr and then calls</span>
+<span class="c">// Serve with handler to handle requests on incoming connections.</span>
+<span class="c">// Accepted connections are configured to enable TCP keep-alives.</span>
+<span class="c">//</span>
+<span class="c">// The handler is typically nil, in which case the DefaultServeMux is used.</span>
+<span class="c">//</span>
+<span class="c">// ListenAndServe always returns a non-nil error.</span>
+<span class="k">func</span> <span class="n">ListenAndServe</span><span class="p">(</span><span class="n">addr</span> <span class="kt">string</span><span class="p">,</span> <span class="n">handler</span> <span class="n">Handler</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+	<span class="n">server</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="n">Server</span><span class="p">{</span><span class="n">Addr</span><span class="o">:</span> <span class="n">addr</span><span class="p">,</span> <span class="n">Handler</span><span class="o">:</span> <span class="n">handler</span><span class="p">}</span>
+	<span class="k">return</span> <span class="n">server</span><span class="o">.</span><span class="n">ListenAndServe</span><span class="p">()</span>
+<span class="p">}</span>
+</pre></table></code></div></div><div class="language-go highlighter-rouge"><div class="code-header"> <span text-data=" Go "><i class="fa-fw fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+</pre><td class="rouge-code"><pre><span class="c">// ListenAndServe listens on the TCP network address srv.Addr and then</span>
+<span class="c">// calls Serve to handle requests on incoming connections.</span>
+<span class="c">// Accepted connections are configured to enable TCP keep-alives.</span>
+<span class="c">//</span>
+<span class="c">// If srv.Addr is blank, ":http" is used.</span>
+<span class="c">//</span>
+<span class="c">// ListenAndServe always returns a non-nil error. After Shutdown or Close,</span>
+<span class="c">// the returned error is ErrServerClosed.</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">srv</span> <span class="o">*</span><span class="n">Server</span><span class="p">)</span> <span class="n">ListenAndServe</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="n">srv</span><span class="o">.</span><span class="n">shuttingDown</span><span class="p">()</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="n">ErrServerClosed</span>
+	<span class="p">}</span>
+	<span class="n">addr</span> <span class="o">:=</span> <span class="n">srv</span><span class="o">.</span><span class="n">Addr</span>
+	<span class="k">if</span> <span class="n">addr</span> <span class="o">==</span> <span class="s">""</span> <span class="p">{</span>
+		<span class="n">addr</span> <span class="o">=</span> <span class="s">":http"</span>
+	<span class="p">}</span>
+	<span class="n">ln</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">net</span><span class="o">.</span><span class="n">Listen</span><span class="p">(</span><span class="s">"tcp"</span><span class="p">,</span> <span class="n">addr</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="n">err</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="n">srv</span><span class="o">.</span><span class="n">Serve</span><span class="p">(</span><span class="n">ln</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></table></code></div></div><div class="language-go highlighter-rouge"><div class="code-header"> <span text-data=" Go "><i class="fa-fw fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+</pre><td class="rouge-code"><pre><span class="c">// Serve accepts incoming connections on the Listener l, creating a</span>
+<span class="c">// new service goroutine for each. The service goroutines read requests and</span>
+<span class="c">// then call srv.Handler to reply to them.</span>
+<span class="c">//</span>
+<span class="c">// HTTP/2 support is only enabled if the Listener returns *tls.Conn</span>
+<span class="c">// connections and they were configured with "h2" in the TLS</span>
+<span class="c">// Config.NextProtos.</span>
+<span class="c">//</span>
+<span class="c">// Serve always returns a non-nil error and closes l.</span>
+<span class="c">// After Shutdown or Close, the returned error is ErrServerClosed.</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">srv</span> <span class="o">*</span><span class="n">Server</span><span class="p">)</span> <span class="n">Serve</span><span class="p">(</span><span class="n">l</span> <span class="n">net</span><span class="o">.</span><span class="n">Listener</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="n">fn</span> <span class="o">:=</span> <span class="n">testHookServerServe</span><span class="p">;</span> <span class="n">fn</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+		<span class="n">fn</span><span class="p">(</span><span class="n">srv</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span> <span class="c">// call hook with unwrapped listener</span>
+	<span class="p">}</span>
+
+	<span class="n">origListener</span> <span class="o">:=</span> <span class="n">l</span>
+	<span class="n">l</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">onceCloseListener</span><span class="p">{</span><span class="n">Listener</span><span class="o">:</span> <span class="n">l</span><span class="p">}</span>
+	<span class="k">defer</span> <span class="n">l</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+	<span class="k">if</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">srv</span><span class="o">.</span><span class="n">setupHTTP2_Serve</span><span class="p">();</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="n">err</span>
+	<span class="p">}</span>
+
+	<span class="k">if</span> <span class="o">!</span><span class="n">srv</span><span class="o">.</span><span class="n">trackListener</span><span class="p">(</span><span class="o">&amp;</span><span class="n">l</span><span class="p">,</span> <span class="no">true</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="n">ErrServerClosed</span>
+	<span class="p">}</span>
+	<span class="k">defer</span> <span class="n">srv</span><span class="o">.</span><span class="n">trackListener</span><span class="p">(</span><span class="o">&amp;</span><span class="n">l</span><span class="p">,</span> <span class="no">false</span><span class="p">)</span>
+
+	<span class="k">var</span> <span class="n">tempDelay</span> <span class="n">time</span><span class="o">.</span><span class="n">Duration</span> <span class="c">// how long to sleep on accept failure</span>
+
+	<span class="n">baseCtx</span> <span class="o">:=</span> <span class="n">context</span><span class="o">.</span><span class="n">Background</span><span class="p">()</span>
+	<span class="k">if</span> <span class="n">srv</span><span class="o">.</span><span class="n">BaseContext</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+		<span class="n">baseCtx</span> <span class="o">=</span> <span class="n">srv</span><span class="o">.</span><span class="n">BaseContext</span><span class="p">(</span><span class="n">origListener</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">baseCtx</span> <span class="o">==</span> <span class="no">nil</span> <span class="p">{</span>
+			<span class="nb">panic</span><span class="p">(</span><span class="s">"BaseContext returned a nil context"</span><span class="p">)</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+
+	<span class="n">ctx</span> <span class="o">:=</span> <span class="n">context</span><span class="o">.</span><span class="n">WithValue</span><span class="p">(</span><span class="n">baseCtx</span><span class="p">,</span> <span class="n">ServerContextKey</span><span class="p">,</span> <span class="n">srv</span><span class="p">)</span>
+	<span class="k">for</span> <span class="p">{</span>
+		<span class="n">rw</span><span class="p">,</span> <span class="n">e</span> <span class="o">:=</span> <span class="n">l</span><span class="o">.</span><span class="n">Accept</span><span class="p">()</span>
+		<span class="k">if</span> <span class="n">e</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+			<span class="k">select</span> <span class="p">{</span>
+			<span class="k">case</span> <span class="o">&lt;-</span><span class="n">srv</span><span class="o">.</span><span class="n">getDoneChan</span><span class="p">()</span><span class="o">:</span>
+				<span class="k">return</span> <span class="n">ErrServerClosed</span>
+			<span class="k">default</span><span class="o">:</span>
+			<span class="p">}</span>
+			<span class="k">if</span> <span class="n">ne</span><span class="p">,</span> <span class="n">ok</span> <span class="o">:=</span> <span class="n">e</span><span class="o">.</span><span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">Error</span><span class="p">);</span> <span class="n">ok</span> <span class="o">&amp;&amp;</span> <span class="n">ne</span><span class="o">.</span><span class="n">Temporary</span><span class="p">()</span> <span class="p">{</span>
+				<span class="k">if</span> <span class="n">tempDelay</span> <span class="o">==</span> <span class="m">0</span> <span class="p">{</span>
+					<span class="n">tempDelay</span> <span class="o">=</span> <span class="m">5</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Millisecond</span>
+				<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+					<span class="n">tempDelay</span> <span class="o">*=</span> <span class="m">2</span>
+				<span class="p">}</span>
+				<span class="k">if</span> <span class="n">max</span> <span class="o">:=</span> <span class="m">1</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">;</span> <span class="n">tempDelay</span> <span class="o">&gt;</span> <span class="n">max</span> <span class="p">{</span>
+					<span class="n">tempDelay</span> <span class="o">=</span> <span class="n">max</span>
+				<span class="p">}</span>
+				<span class="n">srv</span><span class="o">.</span><span class="n">logf</span><span class="p">(</span><span class="s">"http: Accept error: %v; retrying in %v"</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">tempDelay</span><span class="p">)</span>
+				<span class="n">time</span><span class="o">.</span><span class="n">Sleep</span><span class="p">(</span><span class="n">tempDelay</span><span class="p">)</span>
+				<span class="k">continue</span>
+			<span class="p">}</span>
+			<span class="k">return</span> <span class="n">e</span>
+		<span class="p">}</span>
+		<span class="k">if</span> <span class="n">cc</span> <span class="o">:=</span> <span class="n">srv</span><span class="o">.</span><span class="n">ConnContext</span><span class="p">;</span> <span class="n">cc</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+			<span class="n">ctx</span> <span class="o">=</span> <span class="n">cc</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">rw</span><span class="p">)</span>
+			<span class="k">if</span> <span class="n">ctx</span> <span class="o">==</span> <span class="no">nil</span> <span class="p">{</span>
+				<span class="nb">panic</span><span class="p">(</span><span class="s">"ConnContext returned nil"</span><span class="p">)</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+		<span class="n">tempDelay</span> <span class="o">=</span> <span class="m">0</span>
+		<span class="n">c</span> <span class="o">:=</span> <span class="n">srv</span><span class="o">.</span><span class="n">newConn</span><span class="p">(</span><span class="n">rw</span><span class="p">)</span>
+		<span class="n">c</span><span class="o">.</span><span class="n">setState</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">rwc</span><span class="p">,</span> <span class="n">StateNew</span><span class="p">)</span> <span class="c">// before Serve can return</span>
+		<span class="k">go</span> <span class="n">c</span><span class="o">.</span><span class="n">serve</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre></table></code></div></div><p>todo: trackListener这个方法的作用是干什么没有弄明白</p><div class="language-go highlighter-rouge"><div class="code-header"> <span text-data=" Go "><i class="fa-fw fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+</pre><td class="rouge-code"><pre><span class="c">// Serve a new connection.</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">c</span> <span class="o">*</span><span class="n">conn</span><span class="p">)</span> <span class="n">serve</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">c</span><span class="o">.</span><span class="n">remoteAddr</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">rwc</span><span class="o">.</span><span class="n">RemoteAddr</span><span class="p">()</span><span class="o">.</span><span class="n">String</span><span class="p">()</span>
+	<span class="n">ctx</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">WithValue</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">LocalAddrContextKey</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">rwc</span><span class="o">.</span><span class="n">LocalAddr</span><span class="p">())</span>
+	<span class="k">defer</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="n">err</span> <span class="o">:=</span> <span class="nb">recover</span><span class="p">();</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="o">&amp;&amp;</span> <span class="n">err</span> <span class="o">!=</span> <span class="n">ErrAbortHandler</span> <span class="p">{</span>
+			<span class="k">const</span> <span class="n">size</span> <span class="o">=</span> <span class="m">64</span> <span class="o">&lt;&lt;</span> <span class="m">10</span>
+			<span class="n">buf</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+			<span class="n">buf</span> <span class="o">=</span> <span class="n">buf</span><span class="p">[</span><span class="o">:</span><span class="n">runtime</span><span class="o">.</span><span class="n">Stack</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="no">false</span><span class="p">)]</span>
+			<span class="n">c</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">logf</span><span class="p">(</span><span class="s">"http: panic serving %v: %v</span><span class="se">\n</span><span class="s">%s"</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">remoteAddr</span><span class="p">,</span> <span class="n">err</span><span class="p">,</span> <span class="n">buf</span><span class="p">)</span>
+		<span class="p">}</span>
+		<span class="k">if</span> <span class="o">!</span><span class="n">c</span><span class="o">.</span><span class="n">hijacked</span><span class="p">()</span> <span class="p">{</span>
+			<span class="n">c</span><span class="o">.</span><span class="nb">close</span><span class="p">()</span>
+			<span class="n">c</span><span class="o">.</span><span class="n">setState</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">rwc</span><span class="p">,</span> <span class="n">StateClosed</span><span class="p">)</span>
+		<span class="p">}</span>
+	<span class="p">}()</span>
+
+	<span class="k">if</span> <span class="n">tlsConn</span><span class="p">,</span> <span class="n">ok</span> <span class="o">:=</span> <span class="n">c</span><span class="o">.</span><span class="n">rwc</span><span class="o">.</span><span class="p">(</span><span class="o">*</span><span class="n">tls</span><span class="o">.</span><span class="n">Conn</span><span class="p">);</span> <span class="n">ok</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="n">d</span> <span class="o">:=</span> <span class="n">c</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">ReadTimeout</span><span class="p">;</span> <span class="n">d</span> <span class="o">!=</span> <span class="m">0</span> <span class="p">{</span>
+			<span class="n">c</span><span class="o">.</span><span class="n">rwc</span><span class="o">.</span><span class="n">SetReadDeadline</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
+		<span class="p">}</span>
+		<span class="k">if</span> <span class="n">d</span> <span class="o">:=</span> <span class="n">c</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">WriteTimeout</span><span class="p">;</span> <span class="n">d</span> <span class="o">!=</span> <span class="m">0</span> <span class="p">{</span>
+			<span class="n">c</span><span class="o">.</span><span class="n">rwc</span><span class="o">.</span><span class="n">SetWriteDeadline</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
+		<span class="p">}</span>
+		<span class="k">if</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">tlsConn</span><span class="o">.</span><span class="n">Handshake</span><span class="p">();</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+			<span class="c">// If the handshake failed due to the client not speaking</span>
+			<span class="c">// TLS, assume they're speaking plaintext HTTP and write a</span>
+			<span class="c">// 400 response on the TLS conn's underlying net.Conn.</span>
+			<span class="k">if</span> <span class="n">re</span><span class="p">,</span> <span class="n">ok</span> <span class="o">:=</span> <span class="n">err</span><span class="o">.</span><span class="p">(</span><span class="n">tls</span><span class="o">.</span><span class="n">RecordHeaderError</span><span class="p">);</span> <span class="n">ok</span> <span class="o">&amp;&amp;</span> <span class="n">re</span><span class="o">.</span><span class="n">Conn</span> <span class="o">!=</span> <span class="no">nil</span> <span class="o">&amp;&amp;</span> <span class="n">tlsRecordHeaderLooksLikeHTTP</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">RecordHeader</span><span class="p">)</span> <span class="p">{</span>
+				<span class="n">io</span><span class="o">.</span><span class="n">WriteString</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">Conn</span><span class="p">,</span> <span class="s">"HTTP/1.0 400 Bad Request</span><span class="se">\r\n\r\n</span><span class="s">Client sent an HTTP request to an HTTPS server.</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+				<span class="n">re</span><span class="o">.</span><span class="n">Conn</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+				<span class="k">return</span>
+			<span class="p">}</span>
+			<span class="n">c</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">logf</span><span class="p">(</span><span class="s">"http: TLS handshake error from %s: %v"</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">rwc</span><span class="o">.</span><span class="n">RemoteAddr</span><span class="p">(),</span> <span class="n">err</span><span class="p">)</span>
+			<span class="k">return</span>
+		<span class="p">}</span>
+		<span class="n">c</span><span class="o">.</span><span class="n">tlsState</span> <span class="o">=</span> <span class="nb">new</span><span class="p">(</span><span class="n">tls</span><span class="o">.</span><span class="n">ConnectionState</span><span class="p">)</span>
+		<span class="o">*</span><span class="n">c</span><span class="o">.</span><span class="n">tlsState</span> <span class="o">=</span> <span class="n">tlsConn</span><span class="o">.</span><span class="n">ConnectionState</span><span class="p">()</span>
+		<span class="k">if</span> <span class="n">proto</span> <span class="o">:=</span> <span class="n">c</span><span class="o">.</span><span class="n">tlsState</span><span class="o">.</span><span class="n">NegotiatedProtocol</span><span class="p">;</span> <span class="n">validNPN</span><span class="p">(</span><span class="n">proto</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">if</span> <span class="n">fn</span> <span class="o">:=</span> <span class="n">c</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">TLSNextProto</span><span class="p">[</span><span class="n">proto</span><span class="p">];</span> <span class="n">fn</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+				<span class="n">h</span> <span class="o">:=</span> <span class="n">initNPNRequest</span><span class="p">{</span><span class="n">ctx</span><span class="p">,</span> <span class="n">tlsConn</span><span class="p">,</span> <span class="n">serverHandler</span><span class="p">{</span><span class="n">c</span><span class="o">.</span><span class="n">server</span><span class="p">}}</span>
+				<span class="n">fn</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">server</span><span class="p">,</span> <span class="n">tlsConn</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
+			<span class="p">}</span>
+			<span class="k">return</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+
+	<span class="c">// HTTP/1.x from here on.</span>
+
+	<span class="n">ctx</span><span class="p">,</span> <span class="n">cancelCtx</span> <span class="o">:=</span> <span class="n">context</span><span class="o">.</span><span class="n">WithCancel</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+	<span class="n">c</span><span class="o">.</span><span class="n">cancelCtx</span> <span class="o">=</span> <span class="n">cancelCtx</span>
+	<span class="k">defer</span> <span class="n">cancelCtx</span><span class="p">()</span>
+
+	<span class="n">c</span><span class="o">.</span><span class="n">r</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">connReader</span><span class="p">{</span><span class="n">conn</span><span class="o">:</span> <span class="n">c</span><span class="p">}</span>
+	<span class="n">c</span><span class="o">.</span><span class="n">bufr</span> <span class="o">=</span> <span class="n">newBufioReader</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">r</span><span class="p">)</span>
+	<span class="n">c</span><span class="o">.</span><span class="n">bufw</span> <span class="o">=</span> <span class="n">newBufioWriterSize</span><span class="p">(</span><span class="n">checkConnErrorWriter</span><span class="p">{</span><span class="n">c</span><span class="p">},</span> <span class="m">4</span><span class="o">&lt;&lt;</span><span class="m">10</span><span class="p">)</span>
+
+	<span class="k">for</span> <span class="p">{</span>
+		<span class="n">w</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">c</span><span class="o">.</span><span class="n">readRequest</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">remain</span> <span class="o">!=</span> <span class="n">c</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">initialReadLimitSize</span><span class="p">()</span> <span class="p">{</span>
+			<span class="c">// If we read any bytes off the wire, we're active.</span>
+			<span class="n">c</span><span class="o">.</span><span class="n">setState</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">rwc</span><span class="p">,</span> <span class="n">StateActive</span><span class="p">)</span>
+		<span class="p">}</span>
+		<span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+			<span class="k">const</span> <span class="n">errorHeaders</span> <span class="o">=</span> <span class="s">"</span><span class="se">\r\n</span><span class="s">Content-Type: text/plain; charset=utf-8</span><span class="se">\r\n</span><span class="s">Connection: close</span><span class="se">\r\n\r\n</span><span class="s">"</span>
+
+			<span class="k">switch</span> <span class="p">{</span>
+			<span class="k">case</span> <span class="n">err</span> <span class="o">==</span> <span class="n">errTooLarge</span><span class="o">:</span>
+				<span class="c">// Their HTTP client may or may not be</span>
+				<span class="c">// able to read this if we're</span>
+				<span class="c">// responding to them and hanging up</span>
+				<span class="c">// while they're still writing their</span>
+				<span class="c">// request. Undefined behavior.</span>
+				<span class="k">const</span> <span class="n">publicErr</span> <span class="o">=</span> <span class="s">"431 Request Header Fields Too Large"</span>
+				<span class="n">fmt</span><span class="o">.</span><span class="n">Fprintf</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">rwc</span><span class="p">,</span> <span class="s">"HTTP/1.1 "</span><span class="o">+</span><span class="n">publicErr</span><span class="o">+</span><span class="n">errorHeaders</span><span class="o">+</span><span class="n">publicErr</span><span class="p">)</span>
+				<span class="n">c</span><span class="o">.</span><span class="n">closeWriteAndWait</span><span class="p">()</span>
+				<span class="k">return</span>
+
+			<span class="k">case</span> <span class="n">isUnsupportedTEError</span><span class="p">(</span><span class="n">err</span><span class="p">)</span><span class="o">:</span>
+				<span class="c">// Respond as per RFC 7230 Section 3.3.1 which says,</span>
+				<span class="c">//      A server that receives a request message with a</span>
+				<span class="c">//      transfer coding it does not understand SHOULD</span>
+				<span class="c">//      respond with 501 (Unimplemented).</span>
+				<span class="n">code</span> <span class="o">:=</span> <span class="n">StatusNotImplemented</span>
+
+				<span class="c">// We purposefully aren't echoing back the transfer-encoding's value,</span>
+				<span class="c">// so as to mitigate the risk of cross side scripting by an attacker.</span>
+				<span class="n">fmt</span><span class="o">.</span><span class="n">Fprintf</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">rwc</span><span class="p">,</span> <span class="s">"HTTP/1.1 %d %s%sUnsupported transfer encoding"</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">StatusText</span><span class="p">(</span><span class="n">code</span><span class="p">),</span> <span class="n">errorHeaders</span><span class="p">)</span>
+				<span class="k">return</span>
+
+			<span class="k">case</span> <span class="n">isCommonNetReadError</span><span class="p">(</span><span class="n">err</span><span class="p">)</span><span class="o">:</span>
+				<span class="k">return</span> <span class="c">// don't reply</span>
+
+			<span class="k">default</span><span class="o">:</span>
+				<span class="n">publicErr</span> <span class="o">:=</span> <span class="s">"400 Bad Request"</span>
+				<span class="k">if</span> <span class="n">v</span><span class="p">,</span> <span class="n">ok</span> <span class="o">:=</span> <span class="n">err</span><span class="o">.</span><span class="p">(</span><span class="n">badRequestError</span><span class="p">);</span> <span class="n">ok</span> <span class="p">{</span>
+					<span class="n">publicErr</span> <span class="o">=</span> <span class="n">publicErr</span> <span class="o">+</span> <span class="s">": "</span> <span class="o">+</span> <span class="kt">string</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+				<span class="p">}</span>
+
+				<span class="n">fmt</span><span class="o">.</span><span class="n">Fprintf</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">rwc</span><span class="p">,</span> <span class="s">"HTTP/1.1 "</span><span class="o">+</span><span class="n">publicErr</span><span class="o">+</span><span class="n">errorHeaders</span><span class="o">+</span><span class="n">publicErr</span><span class="p">)</span>
+				<span class="k">return</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+
+		<span class="c">// Expect 100 Continue support</span>
+		<span class="n">req</span> <span class="o">:=</span> <span class="n">w</span><span class="o">.</span><span class="n">req</span>
+		<span class="k">if</span> <span class="n">req</span><span class="o">.</span><span class="n">expectsContinue</span><span class="p">()</span> <span class="p">{</span>
+			<span class="k">if</span> <span class="n">req</span><span class="o">.</span><span class="n">ProtoAtLeast</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">1</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">req</span><span class="o">.</span><span class="n">ContentLength</span> <span class="o">!=</span> <span class="m">0</span> <span class="p">{</span>
+				<span class="c">// Wrap the Body reader with one that replies on the connection</span>
+				<span class="n">req</span><span class="o">.</span><span class="n">Body</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">expectContinueReader</span><span class="p">{</span><span class="n">readCloser</span><span class="o">:</span> <span class="n">req</span><span class="o">.</span><span class="n">Body</span><span class="p">,</span> <span class="n">resp</span><span class="o">:</span> <span class="n">w</span><span class="p">}</span>
+			<span class="p">}</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="n">req</span><span class="o">.</span><span class="n">Header</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">"Expect"</span><span class="p">)</span> <span class="o">!=</span> <span class="s">""</span> <span class="p">{</span>
+			<span class="n">w</span><span class="o">.</span><span class="n">sendExpectationFailed</span><span class="p">()</span>
+			<span class="k">return</span>
+		<span class="p">}</span>
+
+		<span class="n">c</span><span class="o">.</span><span class="n">curReq</span><span class="o">.</span><span class="n">Store</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+
+		<span class="k">if</span> <span class="n">requestBodyRemains</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">Body</span><span class="p">)</span> <span class="p">{</span>
+			<span class="n">registerOnHitEOF</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">Body</span><span class="p">,</span> <span class="n">w</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">startBackgroundRead</span><span class="p">)</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+			<span class="n">w</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">startBackgroundRead</span><span class="p">()</span>
+		<span class="p">}</span>
+
+		<span class="c">// HTTP cannot have multiple simultaneous active requests.[*]</span>
+		<span class="c">// Until the server replies to this request, it can't read another,</span>
+		<span class="c">// so we might as well run the handler in this goroutine.</span>
+		<span class="c">// [*] Not strictly true: HTTP pipelining. We could let them all process</span>
+		<span class="c">// in parallel even if their responses need to be serialized.</span>
+		<span class="c">// But we're not going to implement HTTP pipelining because it</span>
+		<span class="c">// was never deployed in the wild and the answer is HTTP/2.</span>
+		<span class="n">serverHandler</span><span class="p">{</span><span class="n">c</span><span class="o">.</span><span class="n">server</span><span class="p">}</span><span class="o">.</span><span class="n">ServeHTTP</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">w</span><span class="o">.</span><span class="n">req</span><span class="p">)</span>
+		<span class="n">w</span><span class="o">.</span><span class="n">cancelCtx</span><span class="p">()</span>
+		<span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">hijacked</span><span class="p">()</span> <span class="p">{</span>
+			<span class="k">return</span>
+		<span class="p">}</span>
+		<span class="n">w</span><span class="o">.</span><span class="n">finishRequest</span><span class="p">()</span>
+		<span class="k">if</span> <span class="o">!</span><span class="n">w</span><span class="o">.</span><span class="n">shouldReuseConnection</span><span class="p">()</span> <span class="p">{</span>
+			<span class="k">if</span> <span class="n">w</span><span class="o">.</span><span class="n">requestBodyLimitHit</span> <span class="o">||</span> <span class="n">w</span><span class="o">.</span><span class="n">closedRequestBodyEarly</span><span class="p">()</span> <span class="p">{</span>
+				<span class="n">c</span><span class="o">.</span><span class="n">closeWriteAndWait</span><span class="p">()</span>
+			<span class="p">}</span>
+			<span class="k">return</span>
+		<span class="p">}</span>
+		<span class="n">c</span><span class="o">.</span><span class="n">setState</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">rwc</span><span class="p">,</span> <span class="n">StateIdle</span><span class="p">)</span>
+		<span class="n">c</span><span class="o">.</span><span class="n">curReq</span><span class="o">.</span><span class="n">Store</span><span class="p">((</span><span class="o">*</span><span class="n">response</span><span class="p">)(</span><span class="no">nil</span><span class="p">))</span>
+
+		<span class="k">if</span> <span class="o">!</span><span class="n">w</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">doKeepAlives</span><span class="p">()</span> <span class="p">{</span>
+			<span class="c">// We're in shutdown mode. We might've replied</span>
+			<span class="c">// to the user without "Connection: close" and</span>
+			<span class="c">// they might think they can send another</span>
+			<span class="c">// request, but such is life with HTTP/1.1.</span>
+			<span class="k">return</span>
+		<span class="p">}</span>
+
+		<span class="k">if</span> <span class="n">d</span> <span class="o">:=</span> <span class="n">c</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">idleTimeout</span><span class="p">();</span> <span class="n">d</span> <span class="o">!=</span> <span class="m">0</span> <span class="p">{</span>
+			<span class="n">c</span><span class="o">.</span><span class="n">rwc</span><span class="o">.</span><span class="n">SetReadDeadline</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
+			<span class="k">if</span> <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">c</span><span class="o">.</span><span class="n">bufr</span><span class="o">.</span><span class="n">Peek</span><span class="p">(</span><span class="m">4</span><span class="p">);</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+				<span class="k">return</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+		<span class="n">c</span><span class="o">.</span><span class="n">rwc</span><span class="o">.</span><span class="n">SetReadDeadline</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">Time</span><span class="p">{})</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre></table></code></div></div><div class="language-go highlighter-rouge"><div class="code-header"> <span text-data=" Go "><i class="fa-fw fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+</pre><td class="rouge-code"><pre><span class="c">// Read next request from connection.</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">c</span> <span class="o">*</span><span class="n">conn</span><span class="p">)</span> <span class="n">readRequest</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">)</span> <span class="p">(</span><span class="n">w</span> <span class="o">*</span><span class="n">response</span><span class="p">,</span> <span class="n">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">hijacked</span><span class="p">()</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="n">ErrHijacked</span>
+	<span class="p">}</span>
+
+	<span class="k">var</span> <span class="p">(</span>
+		<span class="n">wholeReqDeadline</span> <span class="n">time</span><span class="o">.</span><span class="n">Time</span> <span class="c">// or zero if none</span>
+		<span class="n">hdrDeadline</span>      <span class="n">time</span><span class="o">.</span><span class="n">Time</span> <span class="c">// or zero if none</span>
+	<span class="p">)</span>
+	<span class="n">t0</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span>
+	<span class="k">if</span> <span class="n">d</span> <span class="o">:=</span> <span class="n">c</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">readHeaderTimeout</span><span class="p">();</span> <span class="n">d</span> <span class="o">!=</span> <span class="m">0</span> <span class="p">{</span>
+		<span class="n">hdrDeadline</span> <span class="o">=</span> <span class="n">t0</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="k">if</span> <span class="n">d</span> <span class="o">:=</span> <span class="n">c</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">ReadTimeout</span><span class="p">;</span> <span class="n">d</span> <span class="o">!=</span> <span class="m">0</span> <span class="p">{</span>
+		<span class="n">wholeReqDeadline</span> <span class="o">=</span> <span class="n">t0</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="n">c</span><span class="o">.</span><span class="n">rwc</span><span class="o">.</span><span class="n">SetReadDeadline</span><span class="p">(</span><span class="n">hdrDeadline</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">d</span> <span class="o">:=</span> <span class="n">c</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">WriteTimeout</span><span class="p">;</span> <span class="n">d</span> <span class="o">!=</span> <span class="m">0</span> <span class="p">{</span>
+		<span class="k">defer</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+			<span class="n">c</span><span class="o">.</span><span class="n">rwc</span><span class="o">.</span><span class="n">SetWriteDeadline</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
+		<span class="p">}()</span>
+	<span class="p">}</span>
+
+	<span class="n">c</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">setReadLimit</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">initialReadLimitSize</span><span class="p">())</span>
+	<span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">lastMethod</span> <span class="o">==</span> <span class="s">"POST"</span> <span class="p">{</span>
+		<span class="c">// RFC 7230 section 3 tolerance for old buggy clients.</span>
+		<span class="n">peek</span><span class="p">,</span> <span class="n">_</span> <span class="o">:=</span> <span class="n">c</span><span class="o">.</span><span class="n">bufr</span><span class="o">.</span><span class="n">Peek</span><span class="p">(</span><span class="m">4</span><span class="p">)</span> <span class="c">// ReadRequest will get err below</span>
+		<span class="n">c</span><span class="o">.</span><span class="n">bufr</span><span class="o">.</span><span class="n">Discard</span><span class="p">(</span><span class="n">numLeadingCRorLF</span><span class="p">(</span><span class="n">peek</span><span class="p">))</span>
+	<span class="p">}</span>
+	<span class="n">req</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">readRequest</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">bufr</span><span class="p">,</span> <span class="n">keepHostHeader</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">hitReadLimit</span><span class="p">()</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="n">errTooLarge</span>
+		<span class="p">}</span>
+		<span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="n">err</span>
+	<span class="p">}</span>
+
+	<span class="k">if</span> <span class="o">!</span><span class="n">http1ServerSupportsRequest</span><span class="p">(</span><span class="n">req</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="n">badRequestError</span><span class="p">(</span><span class="s">"unsupported protocol version"</span><span class="p">)</span>
+	<span class="p">}</span>
+
+	<span class="n">c</span><span class="o">.</span><span class="n">lastMethod</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">Method</span>
+	<span class="n">c</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">setInfiniteReadLimit</span><span class="p">()</span>
+
+	<span class="n">hosts</span><span class="p">,</span> <span class="n">haveHost</span> <span class="o">:=</span> <span class="n">req</span><span class="o">.</span><span class="n">Header</span><span class="p">[</span><span class="s">"Host"</span><span class="p">]</span>
+	<span class="n">isH2Upgrade</span> <span class="o">:=</span> <span class="n">req</span><span class="o">.</span><span class="n">isH2Upgrade</span><span class="p">()</span>
+	<span class="k">if</span> <span class="n">req</span><span class="o">.</span><span class="n">ProtoAtLeast</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">1</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="o">!</span><span class="n">haveHost</span> <span class="o">||</span> <span class="nb">len</span><span class="p">(</span><span class="n">hosts</span><span class="p">)</span> <span class="o">==</span> <span class="m">0</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">isH2Upgrade</span> <span class="o">&amp;&amp;</span> <span class="n">req</span><span class="o">.</span><span class="n">Method</span> <span class="o">!=</span> <span class="s">"CONNECT"</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="n">badRequestError</span><span class="p">(</span><span class="s">"missing required Host header"</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">hosts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="m">1</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="n">badRequestError</span><span class="p">(</span><span class="s">"too many Host headers"</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">hosts</span><span class="p">)</span> <span class="o">==</span> <span class="m">1</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">httpguts</span><span class="o">.</span><span class="n">ValidHostHeader</span><span class="p">(</span><span class="n">hosts</span><span class="p">[</span><span class="m">0</span><span class="p">])</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="n">badRequestError</span><span class="p">(</span><span class="s">"malformed Host header"</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">vv</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">req</span><span class="o">.</span><span class="n">Header</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="o">!</span><span class="n">httpguts</span><span class="o">.</span><span class="n">ValidHeaderFieldName</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="n">badRequestError</span><span class="p">(</span><span class="s">"invalid header name"</span><span class="p">)</span>
+		<span class="p">}</span>
+		<span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">vv</span> <span class="p">{</span>
+			<span class="k">if</span> <span class="o">!</span><span class="n">httpguts</span><span class="o">.</span><span class="n">ValidHeaderFieldValue</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="p">{</span>
+				<span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="n">badRequestError</span><span class="p">(</span><span class="s">"invalid header value"</span><span class="p">)</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="nb">delete</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">Header</span><span class="p">,</span> <span class="s">"Host"</span><span class="p">)</span>
+
+	<span class="n">ctx</span><span class="p">,</span> <span class="n">cancelCtx</span> <span class="o">:=</span> <span class="n">context</span><span class="o">.</span><span class="n">WithCancel</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+	<span class="n">req</span><span class="o">.</span><span class="n">ctx</span> <span class="o">=</span> <span class="n">ctx</span>
+	<span class="n">req</span><span class="o">.</span><span class="n">RemoteAddr</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">remoteAddr</span>
+	<span class="n">req</span><span class="o">.</span><span class="n">TLS</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">tlsState</span>
+	<span class="k">if</span> <span class="n">body</span><span class="p">,</span> <span class="n">ok</span> <span class="o">:=</span> <span class="n">req</span><span class="o">.</span><span class="n">Body</span><span class="o">.</span><span class="p">(</span><span class="o">*</span><span class="n">body</span><span class="p">);</span> <span class="n">ok</span> <span class="p">{</span>
+		<span class="n">body</span><span class="o">.</span><span class="n">doEarlyClose</span> <span class="o">=</span> <span class="no">true</span>
+	<span class="p">}</span>
+
+	<span class="c">// Adjust the read deadline if necessary.</span>
+	<span class="k">if</span> <span class="o">!</span><span class="n">hdrDeadline</span><span class="o">.</span><span class="n">Equal</span><span class="p">(</span><span class="n">wholeReqDeadline</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">c</span><span class="o">.</span><span class="n">rwc</span><span class="o">.</span><span class="n">SetReadDeadline</span><span class="p">(</span><span class="n">wholeReqDeadline</span><span class="p">)</span>
+	<span class="p">}</span>
+
+	<span class="n">w</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">response</span><span class="p">{</span>
+		<span class="n">conn</span><span class="o">:</span>          <span class="n">c</span><span class="p">,</span>
+		<span class="n">cancelCtx</span><span class="o">:</span>     <span class="n">cancelCtx</span><span class="p">,</span>
+		<span class="n">req</span><span class="o">:</span>           <span class="n">req</span><span class="p">,</span>
+		<span class="n">reqBody</span><span class="o">:</span>       <span class="n">req</span><span class="o">.</span><span class="n">Body</span><span class="p">,</span>
+		<span class="n">handlerHeader</span><span class="o">:</span> <span class="nb">make</span><span class="p">(</span><span class="n">Header</span><span class="p">),</span>
+		<span class="n">contentLength</span><span class="o">:</span> <span class="o">-</span><span class="m">1</span><span class="p">,</span>
+		<span class="n">closeNotifyCh</span><span class="o">:</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="kt">bool</span><span class="p">,</span> <span class="m">1</span><span class="p">),</span>
+
+		<span class="c">// We populate these ahead of time so we're not</span>
+		<span class="c">// reading from req.Header after their Handler starts</span>
+		<span class="c">// and maybe mutates it (Issue 14940)</span>
+		<span class="n">wants10KeepAlive</span><span class="o">:</span> <span class="n">req</span><span class="o">.</span><span class="n">wantsHttp10KeepAlive</span><span class="p">(),</span>
+		<span class="n">wantsClose</span><span class="o">:</span>       <span class="n">req</span><span class="o">.</span><span class="n">wantsClose</span><span class="p">(),</span>
+	<span class="p">}</span>
+	<span class="k">if</span> <span class="n">isH2Upgrade</span> <span class="p">{</span>
+		<span class="n">w</span><span class="o">.</span><span class="n">closeAfterReply</span> <span class="o">=</span> <span class="no">true</span>
+	<span class="p">}</span>
+	<span class="n">w</span><span class="o">.</span><span class="n">cw</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">w</span>
+	<span class="n">w</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">newBufioWriterSize</span><span class="p">(</span><span class="o">&amp;</span><span class="n">w</span><span class="o">.</span><span class="n">cw</span><span class="p">,</span> <span class="n">bufferBeforeChunkingSize</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">w</span><span class="p">,</span> <span class="no">nil</span>
+<span class="p">}</span>
+</pre></table></code></div></div><div class="language-go highlighter-rouge"><div class="code-header"> <span text-data=" Go "><i class="fa-fw fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre><td class="rouge-code"><pre><span class="k">func</span> <span class="p">(</span><span class="n">sh</span> <span class="n">serverHandler</span><span class="p">)</span> <span class="n">ServeHTTP</span><span class="p">(</span><span class="n">rw</span> <span class="n">ResponseWriter</span><span class="p">,</span> <span class="n">req</span> <span class="o">*</span><span class="n">Request</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">handler</span> <span class="o">:=</span> <span class="n">sh</span><span class="o">.</span><span class="n">srv</span><span class="o">.</span><span class="n">Handler</span>
+	<span class="k">if</span> <span class="n">handler</span> <span class="o">==</span> <span class="no">nil</span> <span class="p">{</span>
+		<span class="n">handler</span> <span class="o">=</span> <span class="n">DefaultServeMux</span>
+	<span class="p">}</span>
+	<span class="k">if</span> <span class="n">req</span><span class="o">.</span><span class="n">RequestURI</span> <span class="o">==</span> <span class="s">"*"</span> <span class="o">&amp;&amp;</span> <span class="n">req</span><span class="o">.</span><span class="n">Method</span> <span class="o">==</span> <span class="s">"OPTIONS"</span> <span class="p">{</span>
+		<span class="n">handler</span> <span class="o">=</span> <span class="n">globalOptionsHandler</span><span class="p">{}</span>
+	<span class="p">}</span>
+	<span class="n">handler</span><span class="o">.</span><span class="n">ServeHTTP</span><span class="p">(</span><span class="n">rw</span><span class="p">,</span> <span class="n">req</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></table></code></div></div><p>参考handler接口定义</p><div class="language-go highlighter-rouge"><div class="code-header"> <span text-data=" Go "><i class="fa-fw fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre><td class="rouge-code"><pre><span class="k">type</span> <span class="n">Handler</span> <span class="k">interface</span> <span class="p">{</span>
+	<span class="n">ServeHTTP</span><span class="p">(</span><span class="n">ResponseWriter</span><span class="p">,</span> <span class="o">*</span><span class="n">Request</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></table></code></div></div><p>辅助参考文档DefaultServeMux：</p><blockquote><p>https://www.lagou.com/lgeduarticle/71243.html</p></blockquote><p>var DefaultServeMux = &amp;defaultServeMux 使用了全局ServeMux来注册路由以实现http.HandleFunc</p><div class="language-go highlighter-rouge"><div class="code-header"> <span text-data=" Go "><i class="fa-fw fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre><td class="rouge-code"><pre><span class="k">type</span> <span class="n">ServeMux</span> <span class="k">struct</span> <span class="p">{</span>
+	<span class="n">mu</span>    <span class="n">sync</span><span class="o">.</span><span class="n">RWMutex</span>
+	<span class="n">m</span>     <span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="n">muxEntry</span>
+	<span class="n">es</span>    <span class="p">[]</span><span class="n">muxEntry</span> <span class="c">// slice of entries sorted from longest to shortest.</span>
+	<span class="n">hosts</span> <span class="kt">bool</span>       <span class="c">// whether any patterns contain hostnames</span>
+<span class="p">}</span>
+
+<span class="k">type</span> <span class="n">muxEntry</span> <span class="k">struct</span> <span class="p">{</span>
+	<span class="n">h</span>       <span class="n">Handler</span>
+	<span class="n">pattern</span> <span class="kt">string</span>
+<span class="p">}</span>
+</pre></table></code></div></div><p>ServeMux主要暴露了这几个方法</p><div class="language-go highlighter-rouge"><div class="code-header"> <span text-data=" Go "><i class="fa-fw fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre><td class="rouge-code"><pre><span class="k">func</span> <span class="p">(</span><span class="n">mux</span> <span class="o">*</span><span class="n">ServeMux</span><span class="p">)</span> <span class="n">Handle</span><span class="p">(</span><span class="n">pattern</span> <span class="kt">string</span><span class="p">,</span> <span class="n">handler</span> <span class="n">Handler</span><span class="p">)</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">mux</span> <span class="o">*</span><span class="n">ServeMux</span><span class="p">)</span> <span class="n">HandleFunc</span><span class="p">(</span><span class="n">pattern</span> <span class="kt">string</span><span class="p">,</span> <span class="n">handler</span> <span class="k">func</span><span class="p">(</span><span class="n">ResponseWriter</span><span class="p">,</span> <span class="o">*</span><span class="n">Request</span><span class="p">))</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">mux</span> <span class="o">*</span><span class="n">ServeMux</span><span class="p">)</span> <span class="n">Handler</span><span class="p">(</span><span class="n">r</span> <span class="o">*</span><span class="n">Request</span><span class="p">)</span> <span class="p">(</span><span class="n">h</span> <span class="n">Handler</span><span class="p">,</span> <span class="n">pattern</span> <span class="kt">string</span><span class="p">)</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">mux</span> <span class="o">*</span><span class="n">ServeMux</span><span class="p">)</span> <span class="n">ServeHTTP</span><span class="p">(</span><span class="n">w</span> <span class="n">ResponseWriter</span><span class="p">,</span> <span class="n">r</span> <span class="o">*</span><span class="n">Request</span><span class="p">)</span>
+</pre></table></code></div></div><p>Handle注册handle</p><div class="language-go highlighter-rouge"><div class="code-header"> <span text-data=" Go "><i class="fa-fw fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+</pre><td class="rouge-code"><pre><span class="c">// Handle registers the handler for the given pattern.</span>
+<span class="c">// If a handler already exists for pattern, Handle panics.</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">mux</span> <span class="o">*</span><span class="n">ServeMux</span><span class="p">)</span> <span class="n">Handle</span><span class="p">(</span><span class="n">pattern</span> <span class="kt">string</span><span class="p">,</span> <span class="n">handler</span> <span class="n">Handler</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">mux</span><span class="o">.</span><span class="n">mu</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+	<span class="k">defer</span> <span class="n">mux</span><span class="o">.</span><span class="n">mu</span><span class="o">.</span><span class="n">Unlock</span><span class="p">()</span>
+
+	<span class="k">if</span> <span class="n">pattern</span> <span class="o">==</span> <span class="s">""</span> <span class="p">{</span>
+		<span class="nb">panic</span><span class="p">(</span><span class="s">"http: invalid pattern"</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="k">if</span> <span class="n">handler</span> <span class="o">==</span> <span class="no">nil</span> <span class="p">{</span>
+		<span class="nb">panic</span><span class="p">(</span><span class="s">"http: nil handler"</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="k">if</span> <span class="n">_</span><span class="p">,</span> <span class="n">exist</span> <span class="o">:=</span> <span class="n">mux</span><span class="o">.</span><span class="n">m</span><span class="p">[</span><span class="n">pattern</span><span class="p">];</span> <span class="n">exist</span> <span class="p">{</span>
+		<span class="nb">panic</span><span class="p">(</span><span class="s">"http: multiple registrations for "</span> <span class="o">+</span> <span class="n">pattern</span><span class="p">)</span>
+	<span class="p">}</span>
+
+	<span class="k">if</span> <span class="n">mux</span><span class="o">.</span><span class="n">m</span> <span class="o">==</span> <span class="no">nil</span> <span class="p">{</span>
+		<span class="n">mux</span><span class="o">.</span><span class="n">m</span> <span class="o">=</span> <span class="nb">make</span><span class="p">(</span><span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="n">muxEntry</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="n">e</span> <span class="o">:=</span> <span class="n">muxEntry</span><span class="p">{</span><span class="n">h</span><span class="o">:</span> <span class="n">handler</span><span class="p">,</span> <span class="n">pattern</span><span class="o">:</span> <span class="n">pattern</span><span class="p">}</span>
+	<span class="n">mux</span><span class="o">.</span><span class="n">m</span><span class="p">[</span><span class="n">pattern</span><span class="p">]</span> <span class="o">=</span> <span class="n">e</span>
+	<span class="k">if</span> <span class="n">pattern</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span><span class="o">-</span><span class="m">1</span><span class="p">]</span> <span class="o">==</span> <span class="sc">'/'</span> <span class="p">{</span>
+		<span class="n">mux</span><span class="o">.</span><span class="n">es</span> <span class="o">=</span> <span class="n">appendSorted</span><span class="p">(</span><span class="n">mux</span><span class="o">.</span><span class="n">es</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+	<span class="p">}</span>
+
+	<span class="k">if</span> <span class="n">pattern</span><span class="p">[</span><span class="m">0</span><span class="p">]</span> <span class="o">!=</span> <span class="sc">'/'</span> <span class="p">{</span>
+		<span class="n">mux</span><span class="o">.</span><span class="n">hosts</span> <span class="o">=</span> <span class="no">true</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre></table></code></div></div><p>HandleFunc包装function为handler</p><div class="language-go highlighter-rouge"><div class="code-header"> <span text-data=" Go "><i class="fa-fw fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre><td class="rouge-code"><pre><span class="c">// HandleFunc registers the handler function for the given pattern.</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">mux</span> <span class="o">*</span><span class="n">ServeMux</span><span class="p">)</span> <span class="n">HandleFunc</span><span class="p">(</span><span class="n">pattern</span> <span class="kt">string</span><span class="p">,</span> <span class="n">handler</span> <span class="k">func</span><span class="p">(</span><span class="n">ResponseWriter</span><span class="p">,</span> <span class="o">*</span><span class="n">Request</span><span class="p">))</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="n">handler</span> <span class="o">==</span> <span class="no">nil</span> <span class="p">{</span>
+		<span class="nb">panic</span><span class="p">(</span><span class="s">"http: nil handler"</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="n">mux</span><span class="o">.</span><span class="n">Handle</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">HandlerFunc</span><span class="p">(</span><span class="n">handler</span><span class="p">))</span>
+<span class="p">}</span>
+</pre></table></code></div></div><p>handler</p><div class="language-go highlighter-rouge"><div class="code-header"> <span text-data=" Go "><i class="fa-fw fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+</pre><td class="rouge-code"><pre><span class="c">// handler is the main implementation of Handler.</span>
+<span class="c">// The path is known to be in canonical form, except for CONNECT methods.</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">mux</span> <span class="o">*</span><span class="n">ServeMux</span><span class="p">)</span> <span class="n">handler</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">path</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="n">h</span> <span class="n">Handler</span><span class="p">,</span> <span class="n">pattern</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">mux</span><span class="o">.</span><span class="n">mu</span><span class="o">.</span><span class="n">RLock</span><span class="p">()</span>
+	<span class="k">defer</span> <span class="n">mux</span><span class="o">.</span><span class="n">mu</span><span class="o">.</span><span class="n">RUnlock</span><span class="p">()</span>
+
+	<span class="c">// Host-specific pattern takes precedence over generic ones</span>
+	<span class="k">if</span> <span class="n">mux</span><span class="o">.</span><span class="n">hosts</span> <span class="p">{</span>
+		<span class="n">h</span><span class="p">,</span> <span class="n">pattern</span> <span class="o">=</span> <span class="n">mux</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">host</span> <span class="o">+</span> <span class="n">path</span><span class="p">)</span>
+    <span class="p">}</span>
+
+	<span class="k">if</span> <span class="n">h</span> <span class="o">==</span> <span class="no">nil</span> <span class="p">{</span>
+		<span class="n">h</span><span class="p">,</span> <span class="n">pattern</span> <span class="o">=</span> <span class="n">mux</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="k">if</span> <span class="n">h</span> <span class="o">==</span> <span class="no">nil</span> <span class="p">{</span>
+		<span class="n">h</span><span class="p">,</span> <span class="n">pattern</span> <span class="o">=</span> <span class="n">NotFoundHandler</span><span class="p">(),</span> <span class="s">""</span>
+	<span class="p">}</span>
+	<span class="k">return</span>
+<span class="p">}</span>
+</pre></table></code></div></div><div class="language-go highlighter-rouge"><div class="code-header"> <span text-data=" Go "><i class="fa-fw fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+</pre><td class="rouge-code"><pre><span class="c">// Handler returns the handler to use for the given request,</span>
+<span class="c">// consulting r.Method, r.Host, and r.URL.Path. It always returns</span>
+<span class="c">// a non-nil handler. If the path is not in its canonical form, the</span>
+<span class="c">// handler will be an internally-generated handler that redirects</span>
+<span class="c">// to the canonical path. If the host contains a port, it is ignored</span>
+<span class="c">// when matching handlers.</span>
+<span class="c">//</span>
+<span class="c">// The path and host are used unchanged for CONNECT requests.</span>
+<span class="c">//</span>
+<span class="c">// Handler also returns the registered pattern that matches the</span>
+<span class="c">// request or, in the case of internally-generated redirects,</span>
+<span class="c">// the pattern that will match after following the redirect.</span>
+<span class="c">//</span>
+<span class="c">// If there is no registered handler that applies to the request,</span>
+<span class="c">// Handler returns a ``page not found'' handler and an empty pattern.</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">mux</span> <span class="o">*</span><span class="n">ServeMux</span><span class="p">)</span> <span class="n">Handler</span><span class="p">(</span><span class="n">r</span> <span class="o">*</span><span class="n">Request</span><span class="p">)</span> <span class="p">(</span><span class="n">h</span> <span class="n">Handler</span><span class="p">,</span> <span class="n">pattern</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+
+	<span class="c">// CONNECT requests are not canonicalized.</span>
+	<span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">Method</span> <span class="o">==</span> <span class="s">"CONNECT"</span> <span class="p">{</span>
+		<span class="c">// If r.URL.Path is /tree and its handler is not registered,</span>
+		<span class="c">// the /tree -&gt; /tree/ redirect applies to CONNECT requests</span>
+		<span class="c">// but the path canonicalization does not.</span>
+		<span class="k">if</span> <span class="n">u</span><span class="p">,</span> <span class="n">ok</span> <span class="o">:=</span> <span class="n">mux</span><span class="o">.</span><span class="n">redirectToPathSlash</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">URL</span><span class="o">.</span><span class="n">Host</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">URL</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">URL</span><span class="p">);</span> <span class="n">ok</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="n">RedirectHandler</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">String</span><span class="p">(),</span> <span class="n">StatusMovedPermanently</span><span class="p">),</span> <span class="n">u</span><span class="o">.</span><span class="n">Path</span>
+		<span class="p">}</span>
+
+		<span class="k">return</span> <span class="n">mux</span><span class="o">.</span><span class="n">handler</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">Host</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">URL</span><span class="o">.</span><span class="n">Path</span><span class="p">)</span>
+	<span class="p">}</span>
+
+	<span class="c">// All other requests have any port stripped and path cleaned</span>
+	<span class="c">// before passing to mux.handler.</span>
+	<span class="n">host</span> <span class="o">:=</span> <span class="n">stripHostPort</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">Host</span><span class="p">)</span>
+	<span class="n">path</span> <span class="o">:=</span> <span class="n">cleanPath</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">URL</span><span class="o">.</span><span class="n">Path</span><span class="p">)</span>
+
+	<span class="c">// If the given path is /tree and its handler is not registered,</span>
+	<span class="c">// redirect for /tree/.</span>
+	<span class="k">if</span> <span class="n">u</span><span class="p">,</span> <span class="n">ok</span> <span class="o">:=</span> <span class="n">mux</span><span class="o">.</span><span class="n">redirectToPathSlash</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">URL</span><span class="p">);</span> <span class="n">ok</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="n">RedirectHandler</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">String</span><span class="p">(),</span> <span class="n">StatusMovedPermanently</span><span class="p">),</span> <span class="n">u</span><span class="o">.</span><span class="n">Path</span>
+	<span class="p">}</span>
+
+	<span class="k">if</span> <span class="n">path</span> <span class="o">!=</span> <span class="n">r</span><span class="o">.</span><span class="n">URL</span><span class="o">.</span><span class="n">Path</span> <span class="p">{</span>
+		<span class="n">_</span><span class="p">,</span> <span class="n">pattern</span> <span class="o">=</span> <span class="n">mux</span><span class="o">.</span><span class="n">handler</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+		<span class="n">url</span> <span class="o">:=</span> <span class="o">*</span><span class="n">r</span><span class="o">.</span><span class="n">URL</span>
+		<span class="n">url</span><span class="o">.</span><span class="n">Path</span> <span class="o">=</span> <span class="n">path</span>
+		<span class="k">return</span> <span class="n">RedirectHandler</span><span class="p">(</span><span class="n">url</span><span class="o">.</span><span class="n">String</span><span class="p">(),</span> <span class="n">StatusMovedPermanently</span><span class="p">),</span> <span class="n">pattern</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="n">mux</span><span class="o">.</span><span class="n">handler</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">URL</span><span class="o">.</span><span class="n">Path</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></table></code></div></div><p>match会匹配最长的路径，因为mux.es按照长度递减排序 例如如下path： /a/b /a/ 当url为/a/b/c会优先匹配/a/b</p><div class="language-go highlighter-rouge"><div class="code-header"> <span text-data=" Go "><i class="fa-fw fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+</pre><td class="rouge-code"><pre><span class="c">// Find a handler on a handler map given a path string.</span>
+<span class="c">// Most-specific (longest) pattern wins.</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">mux</span> <span class="o">*</span><span class="n">ServeMux</span><span class="p">)</span> <span class="n">match</span><span class="p">(</span><span class="n">path</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="n">h</span> <span class="n">Handler</span><span class="p">,</span> <span class="n">pattern</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+	<span class="c">// Check for exact match first.</span>
+	<span class="n">v</span><span class="p">,</span> <span class="n">ok</span> <span class="o">:=</span> <span class="n">mux</span><span class="o">.</span><span class="n">m</span><span class="p">[</span><span class="n">path</span><span class="p">]</span>
+	<span class="k">if</span> <span class="n">ok</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="n">v</span><span class="o">.</span><span class="n">h</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">pattern</span>
+	<span class="p">}</span>
+
+	<span class="c">// Check for longest valid match.  mux.es contains all patterns</span>
+	<span class="c">// that end in / sorted from longest to shortest.</span>
+	<span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">e</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">mux</span><span class="o">.</span><span class="n">es</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="n">strings</span><span class="o">.</span><span class="n">HasPrefix</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">pattern</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="n">e</span><span class="o">.</span><span class="n">h</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">pattern</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="s">""</span>
+<span class="p">}</span>
+</pre></table></code></div></div><p>实现了ServeHttp接口</p><div class="language-go highlighter-rouge"><div class="code-header"> <span text-data=" Go "><i class="fa-fw fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre><td class="rouge-code"><pre><span class="k">func</span> <span class="p">(</span><span class="n">mux</span> <span class="o">*</span><span class="n">ServeMux</span><span class="p">)</span> <span class="n">ServeHTTP</span><span class="p">(</span><span class="n">w</span> <span class="n">ResponseWriter</span><span class="p">,</span> <span class="n">r</span> <span class="o">*</span><span class="n">Request</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">RequestURI</span> <span class="o">==</span> <span class="s">"*"</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">ProtoAtLeast</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">1</span><span class="p">)</span> <span class="p">{</span>
+			<span class="n">w</span><span class="o">.</span><span class="n">Header</span><span class="p">()</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="s">"Connection"</span><span class="p">,</span> <span class="s">"close"</span><span class="p">)</span>
+		<span class="p">}</span>
+		<span class="n">w</span><span class="o">.</span><span class="n">WriteHeader</span><span class="p">(</span><span class="n">StatusBadRequest</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="p">}</span>
+	<span class="n">h</span><span class="p">,</span> <span class="n">_</span> <span class="o">:=</span> <span class="n">mux</span><span class="o">.</span><span class="n">Handler</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+	<span class="n">h</span><span class="o">.</span><span class="n">ServeHTTP</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></table></code></div></div><p>总结：</p><blockquote><p>Handle 和 HandleFunc 方法用来将路由路径与处理函数的映射通过一个 map 记录到当前的 mux 实例里；Handler 方法将接收的请求中的 URL 预处理后拿去和记录的映射匹配，若匹配到，就返回该路由的处理函数和路径；ServeHTTP 方法将请求派遣给匹配到的处理函数处理。</p></blockquote><h2 id="参考">参考</h2><blockquote><p>https://www.codeleading.com/article/61262896573/</p></blockquote></div><div class="post-tail-wrapper text-muted"><div class="post-meta mb-3"> <i class="far fa-folder-open fa-fw mr-1"></i> <a href='/categories/cs/'>cs</a>, <a href='/categories/network/'>network</a></div><div class="post-tags"> <i class="fa fa-tags fa-fw mr-1"></i> <a href="/tags/http/" class="post-tag no-text-decoration" >http</a> <a href="/tags/go/" class="post-tag no-text-decoration" >go</a></div><div class="post-tail-bottom d-flex justify-content-between align-items-center mt-3 pt-5 pb-2"><div class="license-wrapper"> This post is licensed under <a href="https://creativecommons.org/licenses/by/4.0/"> CC BY 4.0 </a> by the author.</div><div class="share-wrapper"> <span class="share-label text-muted mr-1">Share</span> <span class="share-icons"> <i id="copy-link" class="fa-fw fas fa-link small" data-toggle="tooltip" data-placement="top" title="Copy link" title-succeed="Link copied successfully!"> </i> </span></div></div></div></div></div><div id="panel-wrapper" class="col-xl-3 pl-2 text-muted topbar-down"><div class="access"><div id="access-lastmod" class="post"> <span>Recent Update</span><ul class="post-content pl-0 pb-1 ml-1 mt-2"><li><a href="/posts/gcache-note/">gcache源码阅读 笔记</a><li><a href="/posts/send-on-closed-channel/">go向关闭的channel发送数据bug修复</a><li><a href="/posts/string-pointer/">go string指针</a><li><a href="/posts/http-get-params-list/">http get列表参数 笔记</a><li><a href="/posts/cors-note/">跨源资源共享 笔记</a></ul></div><div id="access-tags"> <span>Trending Tags</span><div class="d-flex flex-wrap mt-3 mb-1 mr-3"> <a class="post-tag" href="/tags/go/">go</a> <a class="post-tag" href="/tags/http/">http</a> <a class="post-tag" href="/tags/nsq/">nsq</a> <a class="post-tag" href="/tags/stack/">stack</a> <a class="post-tag" href="/tags/tcp/">tcp</a> <a class="post-tag" href="/tags/file/">file</a> <a class="post-tag" href="/tags/jekyll/">jekyll</a> <a class="post-tag" href="/tags/mq/">mq</a> <a class="post-tag" href="/tags/queue/">queue</a> <a class="post-tag" href="/tags/sort/">sort</a></div></div></div><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@1.0.1/dist/bootstrap-toc.min.js"></script><div id="toc-wrapper" class="pl-0 pr-4 mb-5"> <span class="pl-3 pt-2 mb-2">Contents</span><nav id="toc" data-toggle="toc"></nav></div></div></div><div class="row"><div class="col-12 col-lg-11 col-xl-8"><div id="post-extend-wrapper" class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-md-4 pr-md-4"><div id="related-posts" class="mt-5 mb-2 mb-sm-4"><h3 class="pt-2 mt-1 mb-4 ml-1" data-toc-skip>Further Reading</h3><div class="card-deck mb-4"><div class="card"> <a href="/posts/go-http-note-2/"><div class="card-body"> <span class="timeago small" >Sep 26, 2021<i class="unloaded">2021-09-26T00:00:00+08:00</i> </span><h3 class="pt-0 mt-1 mb-3" data-toc-skip>http in go 笔记2</h3><div class="text-muted small"><p> 问题 一个 TCP 连接可以发多少个 HTTP 请求 要搞懂这个问题，我们需要先解决下面五个问题： 0、现代浏览器在与服务器建立了一个 TCP 连接后是否会在一个 HTTP 请求完成后断开？什么情况下会断开？ 1、一个 TCP 连接可以对应几个 HTTP 请求？ 2、一个 TCP 连接中 HTTP 请求发送可以一起发送么（比如一起发三个请求，再三个响应一起接收）？ 3、...</p></div></div></a></div><div class="card"> <a href="/posts/go-learning-1/"><div class="card-body"> <span class="timeago small" >Jun 8, 2021<i class="unloaded">2021-06-08T00:00:00+08:00</i> </span><h3 class="pt-0 mt-1 mb-3" data-toc-skip>go语言 笔记1</h3><div class="text-muted small"><p> 《快学 Go 语言》第 1 课 —— Hello World https://zhuanlan.zhihu.com/p/48013279 go不需要要设置goroot和gopath（默认~/go） 《快学 Go 语言》第 2 课 —— 变量基础 https://zhuanlan.zhihu.com/p/48153187 var s int = 42 var s ...</p></div></div></a></div><div class="card"> <a href="/posts/go-learning-2/"><div class="card-body"> <span class="timeago small" >Jun 8, 2021<i class="unloaded">2021-06-08T00:00:00+08:00</i> </span><h3 class="pt-0 mt-1 mb-3" data-toc-skip>go语言 笔记2</h3><div class="text-muted small"><p> 《快学 Go 语言》第 6 课 —— 字典 https://zhuanlan.zhihu.com/p/50047198 如果你可以预知字典内部键值对的数量，那么还可以给 make 函数传递一个整数值，通知运行时提前分配好相应的内存。这样可以避免字典在长大的过程中要经历的多次扩容操作。 var m = make(map[int]string, 16) 同 Pyt...</p></div></div></a></div></div></div><div class="post-navigation d-flex justify-content-between"> <a href="/posts/geecache-learning/" class="btn btn-outline-primary" prompt="Older"><p>geecache 笔记</p></a> <a href="/posts/go-http-note-2/" class="btn btn-outline-primary" prompt="Newer"><p>http in go 笔记2</p></a></div></div></div></div><footer class="d-flex w-100 justify-content-center"><div class="d-flex justify-content-between align-items-center"><div class="footer-left"><p class="mb-0"> © 2022 <a href="https://github.com/peigongdh">peigong</a>. <span data-toggle="tooltip" data-placement="top" title="Except where otherwise noted, the blog posts on this site are licensed under the Creative Commons Attribution 4.0 International (CC BY 4.0) License by the author.">Some rights reserved.</span></p></div><div class="footer-right"><p class="mb-0"> Powered by <a href="https://jekyllrb.com" target="_blank" rel="noopener">Jekyll</a> with <a href="https://github.com/cotes2020/jekyll-theme-chirpy" target="_blank" rel="noopener">Chirpy</a> theme.</p></div></div></footer></div><div id="search-result-wrapper" class="d-flex justify-content-center unloaded"><div class="col-12 col-sm-11 post-content"><div id="search-hints"><h4 class="text-muted mb-4">Trending Tags</h4><a class="post-tag" href="/tags/go/">go</a> <a class="post-tag" href="/tags/http/">http</a> <a class="post-tag" href="/tags/nsq/">nsq</a> <a class="post-tag" href="/tags/stack/">stack</a> <a class="post-tag" href="/tags/tcp/">tcp</a> <a class="post-tag" href="/tags/file/">file</a> <a class="post-tag" href="/tags/jekyll/">jekyll</a> <a class="post-tag" href="/tags/mq/">mq</a> <a class="post-tag" href="/tags/queue/">queue</a> <a class="post-tag" href="/tags/sort/">sort</a></div><div id="search-results" class="d-flex flex-wrap justify-content-center text-muted mt-3"></div></div></div></div><div id="mask"></div><a id="back-to-top" href="#" aria-label="back-to-top" class="btn btn-lg btn-box-shadow" role="button"> <i class="fas fa-angle-up"></i> </a> <script src="https://cdn.jsdelivr.net/npm/simple-jekyll-search@1.10.0/dest/simple-jekyll-search.min.js"></script> <script> SimpleJekyllSearch({ searchInput: document.getElementById('search-input'), resultsContainer: document.getElementById('search-results'), json: '/assets/js/data/search.json', searchResultTemplate: '<div class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-lg-4 pr-lg-4 pl-xl-0 pr-xl-0"> <a href="{url}">{title}</a><div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1"> {categories} {tags}</div><p>{snippet}</p></div>', noResultsText: '<p class="mt-5">Oops! No result founds.</p>', templateMiddleware: function(prop, value, template) { if (prop === 'categories') { if (value === '') { return `${value}`; } else { return `<div class="mr-sm-4"><i class="far fa-folder fa-fw"></i>${value}</div>`; } } if (prop === 'tags') { if (value === '') { return `${value}`; } else { return `<div><i class="fa fa-tag fa-fw"></i>${value}</div>`; } } } }); </script> <script src="https://cdn.jsdelivr.net/combine/npm/lozad/dist/lozad.min.js,npm/magnific-popup@1/dist/jquery.magnific-popup.min.js,npm/clipboard@2/dist/clipboard.min.js"></script> <script defer src="/assets/js/dist/post.min.js"></script> <script src="https://cdn.jsdelivr.net/combine/npm/popper.js@1.16.1,npm/bootstrap@4/dist/js/bootstrap.min.js"></script> <script defer src="/app.js"></script> <script defer src="https://www.googletagmanager.com/gtag/js?id="></script> <script> document.addEventListener("DOMContentLoaded", function(event) { window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', ''); }); </script>
